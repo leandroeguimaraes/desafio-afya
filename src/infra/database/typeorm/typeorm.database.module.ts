@@ -16,10 +16,12 @@ import { join } from 'path';
         password: configService.get('POSTGRES_PASSWORD'),
         database: configService.get('POSTGRES_DB'),
         entities: [join(__dirname, '../../../**', '*.entity.{ts,js}')],
-        migrations: [join(__dirname, '../../../', 'migrations', ' *.js')],
+        migrations: [join(__dirname, '../../..', 'migrations/*.{ts,js}')],
         migrationsRun: true,
+        synchronize: false,
+        migrationsTableName: 'migrations',
       }),
     }),
   ],
 })
-export class PostgresDatabaseModule {}
+export class TypeOrmDatabaseModule {}
