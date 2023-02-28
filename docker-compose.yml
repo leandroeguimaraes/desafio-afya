@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  prod:
+    build:
+      context: .
+      target: production
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    env_file:
+      - .env
+
+  dev:
+    build:
+      context: .
+      target: development
+    ports:
+      - '3000:3000'
+    env_file:
+      - development.env
+    volumes:
+      - .:/app
+    depends_on:
+      - db_dev
+      - pgadmin
+
+  db_dev:
+    image: postgres:latest
+    env_file:
+      - development.env
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    env_file:
+      - development.env
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      - db_dev
+
+volumes:
+  pgadmin-data:
