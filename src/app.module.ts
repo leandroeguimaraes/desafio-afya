@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './app/users/users.module';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
-import { TypeOrmDatabaseModule } from './infra/database/postgres/typeorm.database.module';
+import { dataSourceOptions } from '../db/data-source';
 
 @Module({
   imports: [
@@ -18,7 +20,8 @@ import { TypeOrmDatabaseModule } from './infra/database/postgres/typeorm.databas
           ? '.env'
           : `${process.env.NODE_ENV}.env`,
     }),
-    TypeOrmDatabaseModule,
+    UsersModule,
+    TypeOrmModule.forRoot(dataSourceOptions),
   ],
   controllers: [AppController],
   providers: [AppService],
