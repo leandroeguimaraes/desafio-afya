@@ -7,6 +7,10 @@ import { UsersModule } from './app/users/users.module';
 import { configuration } from './config/configuration';
 import { validationSchema } from './config/validation';
 import { dataSourceOptions } from '../db/data-source';
+import { AuthModule } from './app/auth/auth.module';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { JwtStrategy } from './common/guards/jwt.strategy';
+import { LocalStrategy } from './common/guards/local.strategy';
 
 @Module({
   imports: [
@@ -20,10 +24,11 @@ import { dataSourceOptions } from '../db/data-source';
           ? '.env'
           : `${process.env.NODE_ENV}.env`,
     }),
-    UsersModule,
     TypeOrmModule.forRoot(dataSourceOptions),
+    UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [JwtAuthGuard, LocalStrategy, JwtStrategy, AppService],
 })
 export class AppModule {}

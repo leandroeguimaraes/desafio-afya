@@ -4,19 +4,15 @@ import { Repository } from 'typeorm';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import {
-  CRYPT_SERVICE,
-  ICryptService,
-} from 'src/infra/crypt/interface/crypt.interface';
+import { CRYPT_SERVICE } from 'src/infra/crypt/interface/crypt.interface';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { EnumRole } from './enum/roles.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JWTTOKEN_SERVICE } from 'src/infra/jwttoken/interface/jwttoken.interface';
 
 describe('UsersController', () => {
   let usersController: UsersController;
   let usersService: UsersService;
-  let userRepository: Repository<User>;
-  let cryptService: ICryptService;
 
   const mockUser: User = {
     id: 1,
@@ -33,6 +29,12 @@ describe('UsersController', () => {
     createHash: jest.fn(),
   });
 
+  const mockJwtTokenService = () => ({
+    sign: jest.fn(),
+    decode: jest.fn(),
+    verify: jest.fn(),
+  });
+
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -45,14 +47,16 @@ describe('UsersController', () => {
           provide: CRYPT_SERVICE,
           useValue: mockCryptService(),
         },
+        {
+          provide: JWTTOKEN_SERVICE,
+          useValue: mockJwtTokenService(),
+        },
         UsersService,
       ],
     }).compile();
 
     usersController = moduleRef.get<UsersController>(UsersController);
     usersService = moduleRef.get<UsersService>(UsersService);
-    userRepository = moduleRef.get<Repository<User>>(getRepositoryToken(User));
-    cryptService = moduleRef.get<ICryptService>(CRYPT_SERVICE);
   });
 
   describe('create', () => {
