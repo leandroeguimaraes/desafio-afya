@@ -129,6 +129,30 @@ describe('UsersController', () => {
     });
   });
 
+  describe('findByEmail', () => {
+    it('should return user by email', async () => {
+      const user = new User();
+      user.id = 1;
+      user.email = 'doctor@gmail.com';
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
+
+      const result = await usersController.findByEmail(user.email);
+      expect(result).toEqual(user);
+    });
+
+    it('should return 404 if user not found', async () => {
+      const email = 'doctor@gmail.com';
+      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(null);
+
+      try {
+        await usersController.findByEmail(email);
+      } catch (error) {
+        expect(error.status).toEqual(404);
+        expect(error.message).toEqual('User not found');
+      }
+    });
+  });
+
   describe('update', () => {
     it('should update a user', async () => {
       const updateUserDto: UpdateUserDto = {
