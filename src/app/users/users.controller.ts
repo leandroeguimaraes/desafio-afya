@@ -20,6 +20,7 @@ import {
   ApiBearerAuth,
   ApiExtraModels,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -28,7 +29,7 @@ import {
 @ApiExtraModels(CreateUserDto, UpdateUserDto)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -74,18 +75,19 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @Get()
+  @Get('email/:email')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Buscar usuário por email' })
+  @ApiQuery({ name: 'email', required: true, type: String })
   @ApiResponse({
     status: 200,
     description: 'O usuário foi encontrado e retornado.',
   })
   @ApiResponse({ status: 404, description: 'O usuário não foi encontrado.' })
   @ApiBearerAuth()
-  async findByEmail(@Query('email') email: string) {
+  async findByEmail(@Param('email') email: string) {
     const user = await this.usersService.findByEmail(email);
     return user;
   }
