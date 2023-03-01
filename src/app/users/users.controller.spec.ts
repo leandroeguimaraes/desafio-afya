@@ -8,6 +8,7 @@ import { CRYPT_SERVICE } from 'src/infra/crypt/interface/crypt.interface';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { EnumRole } from './enum/roles.enum';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JWTTOKEN_SERVICE } from 'src/infra/jwttoken/interface/jwttoken.interface';
 
 describe('UsersController', () => {
   let usersController: UsersController;
@@ -28,6 +29,12 @@ describe('UsersController', () => {
     createHash: jest.fn(),
   });
 
+  const mockJwtTokenService = () => ({
+    sign: jest.fn(),
+    decode: jest.fn(),
+    verify: jest.fn(),
+  });
+
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -39,6 +46,10 @@ describe('UsersController', () => {
         {
           provide: CRYPT_SERVICE,
           useValue: mockCryptService(),
+        },
+        {
+          provide: JWTTOKEN_SERVICE,
+          useValue: mockJwtTokenService(),
         },
         UsersService,
       ],
