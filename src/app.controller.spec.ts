@@ -15,8 +15,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return "Bem-vindo à API - Prontuário Eletrônico', () => {
+      expect(appController.getHello()).toBe(
+        'Bem-vindo à API - Prontuário Eletrônico',
+      );
     });
   });
 });
