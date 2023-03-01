@@ -9,5 +9,6 @@ import { CryptModule } from 'src/infra/crypt/crypt.module';
   imports: [TypeOrmModule.forFeature([User]), CryptModule],
   controllers: [UsersController],
   providers: [UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}
