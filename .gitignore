@@ -12,8 +12,11 @@ yarn-error.log*
 lerna-debug.log*
 
 #env
-
 *.env
+
+#sonarqube
+.scannerwork
+
 # OS
 .DS_Store
 

@@ -29,7 +29,7 @@ import {
 @ApiExtraModels(CreateUserDto, UpdateUserDto)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -80,7 +80,6 @@ export class UsersController {
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Buscar usuário por email' })
-  @ApiQuery({ name: 'email', required: true, type: String })
   @ApiResponse({
     status: 200,
     description: 'O usuário foi encontrado e retornado.',
