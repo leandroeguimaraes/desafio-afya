@@ -6,7 +6,7 @@ import { JwttokenService } from './jwttoken.service';
 
 const JWTTokenService = {
   provide: JWTTOKEN_SERVICE,
-  useClass: JwttokenService
+  useClass: JwttokenService,
 };
 
 @Module({
@@ -24,6 +24,6 @@ const JWTTokenService = {
     }),
   ],
   providers: [JWTTokenService],
-  exports: [JWTTokenService]
+  exports: [JWTTokenService],
 })
-export class JwtTokenModule { }
+export class JwtTokenModule {}
