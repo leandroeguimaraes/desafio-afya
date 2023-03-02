@@ -57,7 +57,7 @@ describe('RolesGuard', () => {
                 getRequest: jest.fn(() => ({})),
             })),
         };
-        await expect(guard.canActivate(context as unknown as ExecutionContext)).rejects.toHaveReturned;
+        expect(guard.canActivate(context as unknown as ExecutionContext)).rejects.toHaveReturned;
     });
 
     it('should rejects if role is not allowed', () => {

@@ -39,7 +39,7 @@ describe('JwttokenService', () => {
 
             jest.spyOn(jwtService, 'sign').mockReturnValue(expectedToken);
 
-            const token = await jwtTokenService.sign(obj, expiresIn);
+            const token = jwtTokenService.sign(obj, expiresIn);
 
             expect(token).toBe(expectedToken);
             expect(jwtService.sign).toHaveBeenCalledWith(obj, { expiresIn });
@@ -53,7 +53,7 @@ describe('JwttokenService', () => {
                 throw new Error();
             });
 
-            await expect(() => jwtTokenService.sign(obj, expiresIn)).toThrow(
+            expect(() => jwtTokenService.sign(obj, expiresIn)).toThrow(
                 InternalServerErrorException,
             );
             expect(jwtService.sign).toHaveBeenCalledWith(obj, { expiresIn });
@@ -67,7 +67,7 @@ describe('JwttokenService', () => {
 
             jest.spyOn(jwtService, 'decode').mockReturnValue(expectedDecoded);
 
-            const decoded = await jwtTokenService.decode(token);
+            const decoded = jwtTokenService.decode(token);
 
             expect(decoded).toBe(expectedDecoded);
             expect(jwtService.decode).toHaveBeenCalledWith(token);
@@ -80,7 +80,7 @@ describe('JwttokenService', () => {
                 throw new Error();
             });
 
-            await expect(() => jwtTokenService.decode(token)).toThrow(
+            expect(() => jwtTokenService.decode(token)).toThrow(
                 InternalServerErrorException);
             expect(jwtService.decode).toHaveBeenCalledWith(token);
         });

@@ -59,11 +59,11 @@ describe('BcryptService', () => {
             jest.spyOn(bcrypt, 'compareSync').mockImplementation(() => {
                 throw new Error();
             });
-        
+
             const message = 'password';
             const hash = bcrypt.hashSync(message, 10);
-        
-            await expect(() => bcryptService.compare('invalid password', hash)).toThrowError(
+
+            expect(() => bcryptService.compare('invalid password', hash)).toThrowError(
                 new InternalServerErrorException('Erro ao comparar hashes'),
             );
         });
