@@ -40,7 +40,13 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: 'senha deve ser preenchido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @IsStrongPassword({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
+  })
   password: string;
 
   @ApiProperty({

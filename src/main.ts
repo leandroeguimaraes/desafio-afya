@@ -19,7 +19,8 @@ async function bootstrap() {
     Logger.log(`Listening at port: ${port}`);
     Logger.log(process.env.NODE_ENV);
     Logger.log(
-      `Running in: ${process.env.NODE_ENV ? process.env.NODE_ENV : 'production'
+      `Running in: ${
+        process.env.NODE_ENV ? process.env.NODE_ENV : 'production'
       } mode`,
     );
   });
