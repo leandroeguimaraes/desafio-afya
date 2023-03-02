@@ -1,5 +1,5 @@
 import { Reflector } from '@nestjs/core';
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EnumRole } from 'src/app/users/enum/roles.enum';
 import {

@@ -12,10 +12,6 @@ import { LocalStrategy } from './local.strategy';
 describe('LocalStrategy', () => {
     let localStrategy: LocalStrategy;
     let authService: AuthService;
-    let cryptService: ICryptService;
-    let usersService: UsersService;
-    let jwtTokenService: IJwtTokenService;
-    let userRepository: Repository<User>;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -34,10 +30,6 @@ describe('LocalStrategy', () => {
 
         localStrategy = module.get<LocalStrategy>(LocalStrategy);
         authService = module.get<AuthService>(AuthService);
-        cryptService = module.get<ICryptService>(CRYPT_SERVICE);
-        usersService = module.get<UsersService>(UsersService);
-        jwtTokenService = module.get<IJwtTokenService>(JWTTOKEN_SERVICE);
-        userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     });
 
     describe('validate', () => {
