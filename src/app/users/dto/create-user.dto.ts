@@ -5,10 +5,10 @@ import {
   IsIn,
   IsNotEmpty,
   IsOptional,
+  IsStrongPassword,
   MaxLength,
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
-import { IsStrongPassword } from 'src/common/custom-decorator/validation/is-strong-password.valid';
 import { EnumRole } from '../enum/roles.enum';
 
 export class CreateUserDto {
@@ -40,7 +40,7 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: 'senha deve ser preenchido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @IsStrongPassword()
+  @IsStrongPassword({ minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 })
   password: string;
 
   @ApiProperty({

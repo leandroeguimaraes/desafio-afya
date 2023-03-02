@@ -10,7 +10,7 @@ import { IJwtTokenService } from './interface/jwttoken.interface';
 export class JwttokenService implements IJwtTokenService {
   private readonly logger = new Logger(JwttokenService.name);
 
-  constructor(private jwtService: JwtService) {}
+  constructor(private jwtService: JwtService) { }
 
   sign(obj: object, expiresIn: string | number) {
     try {
