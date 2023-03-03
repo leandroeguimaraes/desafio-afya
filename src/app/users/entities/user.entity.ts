@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Patient } from 'src/app/patients/entities/patient.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -26,7 +28,7 @@ export class User {
   email: string;
 
   @ApiProperty({ description: 'Senha do usuário' })
-  @Column()
+  @Column({ nullable: false })
   password: string;
 
   @ApiProperty({
@@ -56,4 +58,11 @@ export class User {
   })
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: string;
+
+  @ApiProperty({
+    type: () => [Patient],
+    description: 'Pacientes relacionados com o usuário',
+  })
+  @OneToMany(() => Patient, (patient) => patient.user)
+  patients: Patient[];
 }

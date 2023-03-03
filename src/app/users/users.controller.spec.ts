@@ -23,6 +23,7 @@ describe('UsersController', () => {
     createdAt: new Date().toDateString(),
     updatedAt: new Date().toDateString(),
     deletedAt: null,
+    patients: null,
   };
 
   const mockCryptService = () => ({
