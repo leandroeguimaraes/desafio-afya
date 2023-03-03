@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
@@ -14,13 +13,12 @@ import {
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
 import { EnumGender } from '../enum/gender.enum';
-import { CreatePatientDto } from './create-patient.dto';
 
-//Obs: Reescrevi mesmo estendendo, para aparecer na docs swagger
-export class UpdatePatientDto extends PartialType(CreatePatientDto) {
+export class UpdatePatientDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
   userId?: number;
 
   @ApiProperty({ description: 'Nome do paciente', example: 'Doctor House' })

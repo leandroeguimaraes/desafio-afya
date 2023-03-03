@@ -1,12 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsNumber } from 'class-validator';
-import { CreateScheduleDto } from './create-schedule.dto';
+import { IsDate, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
-export class UpdateScheduleDto extends PartialType(CreateScheduleDto) {
+export class UpdateScheduleDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
   userId?: number;
 
   @ApiProperty({
@@ -15,6 +14,7 @@ export class UpdateScheduleDto extends PartialType(CreateScheduleDto) {
   })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
   patientId?: number;
 
   @ApiProperty({

@@ -42,7 +42,7 @@ describe('SchedulesService', () => {
       expectedSchedule.userId = createScheduleDto.userId;
 
       jest
-        .spyOn(schedulesRepository, 'findOneBy')
+        .spyOn(schedulesRepository, 'findOne')
         .mockResolvedValue(existingSchedule);
 
       jest
@@ -55,8 +55,11 @@ describe('SchedulesService', () => {
       const createdSchedule = await schedulesService.create(createScheduleDto);
 
       expect(createdSchedule).toEqual(expectedSchedule);
-      expect(schedulesRepository.findOneBy).toHaveBeenCalledWith({
-        date: createScheduleDto.date,
+      expect(schedulesRepository.findOne).toHaveBeenCalledWith({
+        where: {
+          date: createScheduleDto.date,
+          userId: createScheduleDto.userId,
+        },
       });
       expect(schedulesRepository.save).toHaveBeenCalledWith(expectedSchedule);
     });
@@ -71,14 +74,17 @@ describe('SchedulesService', () => {
       const existingSchedule = new Schedule();
 
       jest
-        .spyOn(schedulesRepository, 'findOneBy')
+        .spyOn(schedulesRepository, 'findOne')
         .mockResolvedValue(existingSchedule);
 
       await expect(schedulesService.create(createScheduleDto)).rejects.toThrow(
         ConflictException,
       );
-      expect(schedulesRepository.findOneBy).toHaveBeenCalledWith({
-        date: createScheduleDto.date,
+      expect(schedulesRepository.findOne).toHaveBeenCalledWith({
+        where: {
+          date: createScheduleDto.date,
+          userId: createScheduleDto.userId,
+        },
       });
     });
   });
@@ -113,6 +119,10 @@ describe('SchedulesService', () => {
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
         'schedule.patient',
         'patient',
+      );
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'schedule.user',
+        'user',
       );
       expect(queryBuilder.getMany).toHaveBeenCalledTimes(1);
     });

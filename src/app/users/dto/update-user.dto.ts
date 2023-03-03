@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
@@ -11,10 +10,8 @@ import {
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { EnumRole } from '../enum/roles.enum';
-import { CreateUserDto } from './create-user.dto';
 
-//Obs: Reescrevi mesmo estendendo, para aparecer na docs swagger
-export class UpdateUserDto extends PartialType(CreateUserDto) {
+export class UpdateUserDto {
   @ApiProperty({
     description: 'Nome do usuário',
     maxLength: 50,
