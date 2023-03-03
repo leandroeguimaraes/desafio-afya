@@ -26,6 +26,7 @@ describe('PatientsController', () => {
     deletedAt: null,
     user: null,
     schedules: [],
+    consultations: [],
   };
 
   const mockJwtTokenService = () => ({

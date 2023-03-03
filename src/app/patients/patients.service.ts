@@ -18,9 +18,9 @@ export class PatientsService {
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     const { email } = createPatientDto;
-    const existingUser = await this.patientsRepository.findOneBy({ email });
+    const existingPatient = await this.patientsRepository.findOneBy({ email });
 
-    if (existingUser) {
+    if (existingPatient) {
       throw new ConflictException(
         `Paciente com email ${createPatientDto.email} já existe`,
       );
