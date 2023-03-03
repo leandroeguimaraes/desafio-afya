@@ -4,10 +4,6 @@ import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
-import { EnumRole } from '../users/enum/roles.enum';
-import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/common/guards/roles.guard';
-import { Roles } from 'src/common/custom-decorator/roles-decorator';
 import { JWTTOKEN_SERVICE } from 'src/infra/jwttoken/interface/jwttoken.interface';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 
@@ -31,16 +27,6 @@ describe('PatientsController', () => {
     user: null
   };
 
-  const mockCreatePatientDto: CreatePatientDto = {
-    userId: 1,
-    name: 'Patient Patient',
-    phone: '21998876655',
-    email: 'patient@gmail.com',
-    birthDate: new Date(),
-    gender: 'Masculino',
-    height: 1.80,
-    weight: 75,
-  };
   const mockJwtTokenService = () => ({
     sign: jest.fn(),
     decode: jest.fn(),
