@@ -10,4 +10,4 @@ import { JwtTokenModule } from 'src/infra/jwttoken/jwttoken.module';
   controllers: [PatientsController],
   providers: [PatientsService],
 })
-export class PatientsModule { }
+export class PatientsModule {}

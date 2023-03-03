@@ -19,12 +19,12 @@ describe('PatientsController', () => {
     email: 'patient@gmail.com',
     birthDate: new Date(),
     gender: 'Masculino',
-    height: 1.80,
+    height: 1.8,
     weight: 75,
     createdAt: new Date().toDateString(),
     updatedAt: new Date().toDateString(),
     deletedAt: null,
-    user: null
+    user: null,
   };
 
   const mockJwtTokenService = () => ({
@@ -35,10 +35,7 @@ describe('PatientsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [
-        PatientsController,
-
-      ],
+      controllers: [PatientsController],
       providers: [
         {
           provide: PatientsService,
@@ -70,15 +67,16 @@ describe('PatientsController', () => {
         email: 'patient@gmail.com',
         birthDate: new Date(),
         gender: 'Masculino',
-        height: 1.80,
+        height: 1.8,
         weight: 75,
       };
 
       jest.spyOn(patientsService, 'create').mockResolvedValueOnce(mockPatient);
 
-      expect(await patientsController.create(createPatientDto)).toEqual(mockPatient);
+      expect(await patientsController.create(createPatientDto)).toEqual(
+        mockPatient,
+      );
       expect(patientsService.create).toHaveBeenCalledWith(createPatientDto);
-
     });
 
     it('should throw a ConflictException if patient already exists', async () => {
@@ -89,7 +87,7 @@ describe('PatientsController', () => {
         email: 'patient@gmail.com',
         birthDate: new Date(),
         gender: 'Masculino',
-        height: 1.80,
+        height: 1.8,
         weight: 75,
       };
 
@@ -111,7 +109,9 @@ describe('PatientsController', () => {
     it('should return an array of patients', async () => {
       const mockPatients: Patient[] = [mockPatient];
 
-      jest.spyOn(patientsService, 'findAll').mockResolvedValueOnce(mockPatients);
+      jest
+        .spyOn(patientsService, 'findAll')
+        .mockResolvedValueOnce(mockPatients);
 
       expect(await patientsController.findAll()).toEqual(mockPatients);
       expect(patientsService.findAll).toHaveBeenCalled();
@@ -120,7 +120,6 @@ describe('PatientsController', () => {
 
   describe('findOne', () => {
     it('should return a patient', async () => {
-
       const patient = new Patient();
       patient.id = 1;
       patient.email = 'patient@gmail.com';
@@ -149,11 +148,13 @@ describe('PatientsController', () => {
       const patient = new Patient();
       patient.id = 1;
       patient.email = 'patient@gmail.com';
-      patient.name = 'patient'
+      patient.name = 'patient';
 
       jest.spyOn(patientsService, 'update').mockResolvedValue(patient);
 
-      expect(await patientsController.update('1', updatePatientDto)).toBe(patient);
+      expect(await patientsController.update('1', updatePatientDto)).toBe(
+        patient,
+      );
     });
 
     it('should throw a NotFoundException if patient does not exist', async () => {
@@ -166,9 +167,9 @@ describe('PatientsController', () => {
         throw new NotFoundException(`Paciente com id 2 não foi encontrado`);
       });
 
-      await expect(patientsController.update(id, updatePatientDto)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        patientsController.update(id, updatePatientDto),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 

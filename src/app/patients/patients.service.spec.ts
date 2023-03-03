@@ -22,7 +22,9 @@ describe('PatientsService', () => {
     }).compile();
 
     patientsService = moduleRef.get<PatientsService>(PatientsService);
-    patientsRepository = moduleRef.get<Repository<Patient>>(getRepositoryToken(Patient));
+    patientsRepository = moduleRef.get<Repository<Patient>>(
+      getRepositoryToken(Patient),
+    );
   });
 
   describe('create', () => {
@@ -34,7 +36,7 @@ describe('PatientsService', () => {
         email: 'patient@gmail.com',
         birthDate: new Date(),
         gender: 'Masculino',
-        height: 1.80,
+        height: 1.8,
         weight: 75,
       };
       const existingPatient = undefined;
@@ -44,7 +46,9 @@ describe('PatientsService', () => {
       expectedPatient.name = createPatientDto.name;
       expectedPatient.email = createPatientDto.email;
 
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(existingPatient);
+      jest
+        .spyOn(patientsRepository, 'findOneBy')
+        .mockResolvedValue(existingPatient);
 
       jest.spyOn(patientsRepository, 'create').mockReturnValue(expectedPatient);
       jest.spyOn(patientsRepository, 'save').mockResolvedValue(expectedPatient);
@@ -66,13 +70,15 @@ describe('PatientsService', () => {
         email: 'patient@gmail.com',
         birthDate: new Date(),
         gender: 'Masculino',
-        height: 1.80,
+        height: 1.8,
         weight: 75,
       };
 
       const existingPatient = new Patient();
 
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(existingPatient);
+      jest
+        .spyOn(patientsRepository, 'findOneBy')
+        .mockResolvedValue(existingPatient);
 
       await expect(patientsService.create(createPatientDto)).rejects.toThrow(
         ConflictException,
@@ -100,14 +106,19 @@ describe('PatientsService', () => {
         getMany: jest.fn().mockResolvedValue(patients),
       } as any;
 
-      jest.spyOn(patientsRepository, 'createQueryBuilder').mockReturnValue(queryBuilder);
+      jest
+        .spyOn(patientsRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
 
       const allPatients = await patientsService.findAll();
 
       expect(allPatients).toEqual(patients);
       expect(patientsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
-      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('patient.user', 'user');
-      expect(queryBuilder.getMany).toHaveBeenCalledTimes(1)
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'patient.user',
+        'user',
+      );
+      expect(queryBuilder.getMany).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -128,7 +139,9 @@ describe('PatientsService', () => {
     it('should throw a NotFoundException if patient does not exist', async () => {
       jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(null);
 
-      await expect(patientsService.findOne(1)).rejects.toThrow(NotFoundException);
+      await expect(patientsService.findOne(1)).rejects.toThrow(
+        NotFoundException,
+      );
       expect(patientsRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
     });
   });
@@ -143,14 +156,16 @@ describe('PatientsService', () => {
       patient.phone = '21998876655';
       patient.birthDate = new Date();
       patient.gender = 'Masculino';
-      patient.height = 1.80;
+      patient.height = 1.8;
       patient.weight = 75;
 
       const updatePatientDto = {
         name: 'Patient Patient',
       };
 
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValueOnce(patient);
+      jest
+        .spyOn(patientsRepository, 'findOneBy')
+        .mockResolvedValueOnce(patient);
 
       jest.spyOn(patientsRepository, 'merge').mockReturnValueOnce(patient);
       const saveSpy = jest
@@ -186,7 +201,7 @@ describe('PatientsService', () => {
       patient.phone = '21998876655';
       patient.birthDate = new Date();
       patient.gender = 'Masculino';
-      patient.height = 1.80;
+      patient.height = 1.8;
       patient.weight = 75;
 
       const findOneSpy = jest
@@ -204,9 +219,13 @@ describe('PatientsService', () => {
     });
 
     it('should throw a NotFoundException if the patient does not exist', async () => {
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValueOnce(undefined);
+      jest
+        .spyOn(patientsRepository, 'findOneBy')
+        .mockResolvedValueOnce(undefined);
 
-      await expect(patientsService.remove(1)).rejects.toThrow(NotFoundException);
+      await expect(patientsService.remove(1)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

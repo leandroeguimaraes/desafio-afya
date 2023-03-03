@@ -1,4 +1,8 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePatientDto } from './dto/create-patient.dto';
@@ -10,7 +14,7 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient)
     private patientsRepository: Repository<Patient>,
-  ) { }
+  ) {}
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     const { email } = createPatientDto;
@@ -29,7 +33,7 @@ export class PatientsService {
     return await this.patientsRepository
       .createQueryBuilder('patient')
       .leftJoinAndSelect('patient.user', 'user')
-      .getMany()
+      .getMany();
   }
 
   async findOne(id: number): Promise<Patient> {
@@ -40,7 +44,10 @@ export class PatientsService {
     return patient;
   }
 
-  async update(id: number, updatePatientDto: UpdatePatientDto): Promise<Patient> {
+  async update(
+    id: number,
+    updatePatientDto: UpdatePatientDto,
+  ): Promise<Patient> {
     const patient = await this.findOne(id);
     this.patientsRepository.merge(patient, updatePatientDto);
     return await this.patientsRepository.save(patient);

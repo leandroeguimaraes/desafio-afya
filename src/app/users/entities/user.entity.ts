@@ -63,6 +63,6 @@ export class User {
     type: () => [Patient],
     description: 'Pacientes relacionados com o usuário',
   })
-  @OneToMany(() => Patient, patient => patient.user)
+  @OneToMany(() => Patient, (patient) => patient.user)
   patients: Patient[];
 }
