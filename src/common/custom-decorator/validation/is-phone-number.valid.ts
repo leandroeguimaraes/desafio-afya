@@ -13,7 +13,7 @@ export function IsPhoneNumber(validationOptions?: ValidationOptions) {
       options: validationOptions,
       validator: {
         validate(value: any) {
-          const phoneNumberRegex = /^[0-9]+$/;
+          const phoneNumberRegex = /^\d+$/;
           if (!value || !value.match(phoneNumberRegex)) {
             return false;
           }
