@@ -24,19 +24,19 @@ export class Patient {
     email: string;
 
     @ApiProperty({ example: '2000-01-01  - padrão ISO 8601', description: 'Data de nascimento do paciente' })
-    @Column()
+    @Column({ nullable: false })
     birthDate: Date;
 
     @ApiProperty({ enum: ['Masculino', 'Feminino'], description: 'Gênero do paciente' })
-    @Column()
+    @Column({ nullable: false })
     gender: string;
 
     @ApiProperty({ description: 'Altura do paciente' })
-    @Column({ type: "decimal", precision: 3, scale: 2, default: 0 })
+    @Column({ nullable: false, type: "decimal", precision: 3, scale: 2, default: 0 })
     height: number;
 
     @ApiProperty({ description: 'Peso do paciente' })
-    @Column({ type: "decimal", precision: 4, scale: 1, default: 0 })
+    @Column({ nullable: false, type: "decimal", precision: 4, scale: 1, default: 0 })
     weight: number;
 
     @ApiProperty({ description: 'Data de criação do registro' })

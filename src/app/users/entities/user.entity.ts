@@ -28,7 +28,7 @@ export class User {
   email: string;
 
   @ApiProperty({ description: 'Senha do usuário' })
-  @Column()
+  @Column({ nullable: false })
   password: string;
 
   @ApiProperty({
