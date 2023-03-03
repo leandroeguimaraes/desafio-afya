@@ -8,6 +8,7 @@ import {
   IsNumber,
   MaxLength,
   IsDate,
+  Min,
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
@@ -17,6 +18,7 @@ export class CreatePatientDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0)
   userId: number;
 
   @ApiProperty({ description: 'Nome do paciente', example: 'John Doe' })
