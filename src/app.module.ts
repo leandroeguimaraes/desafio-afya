@@ -13,6 +13,7 @@ import { JwtStrategy } from './common/guards/jwt.strategy';
 import { LocalStrategy } from './common/guards/local.strategy';
 import { PatientsModule } from './app/patients/patients.module';
 import { SchedulesModule } from './app/schedules/schedules.module';
+import { ConsultationsModule } from './app/consultations/consultations.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SchedulesModule } from './app/schedules/schedules.module';
     AuthModule,
     PatientsModule,
     SchedulesModule,
+    ConsultationsModule,
   ],
   controllers: [AppController],
   providers: [JwtAuthGuard, LocalStrategy, JwtStrategy, AppService],
