@@ -11,6 +11,8 @@ import { AuthModule } from './app/auth/auth.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { JwtStrategy } from './common/guards/jwt.strategy';
 import { LocalStrategy } from './common/guards/local.strategy';
+import { PatientsModule } from './app/patients/patients.module';
+import { SchedulesModule } from './app/schedules/schedules.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { LocalStrategy } from './common/guards/local.strategy';
     TypeOrmModule.forRoot(dataSourceOptions),
     UsersModule,
     AuthModule,
+    PatientsModule,
+    SchedulesModule,
   ],
   controllers: [AppController],
   providers: [JwtAuthGuard, LocalStrategy, JwtStrategy, AppService],
