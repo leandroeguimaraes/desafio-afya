@@ -1,8 +1,9 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, Matches, MaxLength } from 'class-validator';
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
+import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
 import { EnumGender } from '../enum/gender.enum';
 import { CreatePatientDto } from './create-patient.dto';
 
@@ -23,9 +24,7 @@ export class UpdatePatientDto extends PartialType(CreatePatientDto) {
     @MaxLength(11, {
         message: 'O número de telefone não pode ter mais do que 11 dígitos',
     })
-    @Matches(/^[0-9]+$/, {
-        message: 'O número de telefone deve conter apenas dígitos numéricos',
-    })
+    @IsPhoneNumber({ message: 'O número de telefone deve conter apenas dígitos numéricos' })
     phone?: string;
 
     @ApiProperty({ description: 'Email do paciente', example: 'johndoe@example.com' })
