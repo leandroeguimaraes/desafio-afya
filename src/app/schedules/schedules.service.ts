@@ -17,13 +17,13 @@ export class SchedulesService {
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
-    const { date } = createScheduleDto;
-    const existingUser = await this.schedulesRepository.findOneBy({ date });
+    const { userId, date } = createScheduleDto;
+    const existingSchedule = await this.schedulesRepository.findOne({
+      where: { date, userId },
+    });
 
-    if (existingUser) {
-      throw new ConflictException(
-        `Agendamento com data ${createScheduleDto.date} já existe`,
-      );
+    if (existingSchedule) {
+      throw new ConflictException(`Agendamento já existe`);
     }
     const schedule = this.schedulesRepository.create(createScheduleDto);
     return await this.schedulesRepository.save(schedule);
@@ -32,6 +32,7 @@ export class SchedulesService {
   async findAll(): Promise<Schedule[]> {
     return this.schedulesRepository
       .createQueryBuilder('schedule')
+      .leftJoinAndSelect('schedule.user', 'user')
       .leftJoinAndSelect('schedule.patient', 'patient')
       .getMany();
   }
