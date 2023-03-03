@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Consultation } from 'src/app/consultations/entities/consultation.entity';
 import { Patient } from 'src/app/patients/entities/patient.entity';
 import { User } from 'src/app/users/entities/user.entity';
 import {
@@ -9,6 +10,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'schedules' })
@@ -60,6 +62,13 @@ export class Schedule {
   deletedAt: string;
 
   @ApiProperty({
+    description: 'Usuário associado ao agendamento',
+    type: () => User,
+  })
+  @ManyToOne(() => User, (user) => user.schedules)
+  user: User;
+
+  @ApiProperty({
     description: 'Paciente associado ao agendamento',
     type: () => Patient,
   })
@@ -67,9 +76,9 @@ export class Schedule {
   patient: Patient;
 
   @ApiProperty({
-    description: 'Usuário associado ao agendamento',
-    type: () => User,
+    description: 'Consulta associado ao agendamento',
+    type: () => Consultation,
   })
-  @ManyToOne(() => User, (user) => user.schedules)
-  user: User;
+  @OneToMany(() => Consultation, (consultation) => consultation.schedule)
+  consultations: Consultation[];
 }

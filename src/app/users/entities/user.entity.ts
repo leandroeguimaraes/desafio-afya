@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Consultation } from 'src/app/consultations/entities/consultation.entity';
 import { Patient } from 'src/app/patients/entities/patient.entity';
 import { Schedule } from 'src/app/schedules/entities/schedule.entity';
 import {
@@ -67,6 +68,17 @@ export class User {
   @OneToMany(() => Patient, (patient) => patient.user)
   patients: Patient[];
 
+  @ApiProperty({
+    type: () => [Schedule],
+    description: 'Agendamentos relacionados com o usuário',
+  })
   @OneToMany(() => Schedule, (schedule) => schedule.user)
   schedules: Schedule[];
+
+  @ApiProperty({
+    type: () => [Consultation],
+    description: 'Consultas relacionados com o usuário',
+  })
+  @OneToMany(() => Consultation, (consultation) => consultation.user)
+  consultations: Consultation[];
 }
