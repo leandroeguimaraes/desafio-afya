@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Schedule } from 'src/app/schedules/entities/schedule.entity';
 import { User } from 'src/app/users/entities/user.entity';
 import {
   Entity,
@@ -8,6 +9,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'patients' })
@@ -83,4 +85,7 @@ export class Patient {
   })
   @ManyToOne(() => User, (user) => user.patients)
   user: User;
+
+  @OneToMany(() => Schedule, (schedule) => schedule.patient)
+  schedules: Schedule[];
 }

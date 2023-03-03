@@ -25,6 +25,7 @@ describe('PatientsController', () => {
     updatedAt: new Date().toDateString(),
     deletedAt: null,
     user: null,
+    schedules: [],
   };
 
   const mockJwtTokenService = () => ({
@@ -175,13 +176,12 @@ describe('PatientsController', () => {
 
   describe('remove', () => {
     it('should remove a patient', async () => {
-      const patient = new Patient();
-      patient.id = 1;
-      patient.email = 'patient@gmail.com';
+      const id = '1';
 
-      jest.spyOn(patientsService, 'remove').mockResolvedValue(undefined);
+      jest.spyOn(patientsService, 'remove').mockResolvedValueOnce();
 
-      await patientsController.remove('1');
+      await patientsController.remove(id);
+      expect(patientsService.remove).toHaveBeenCalledWith(Number(id));
     });
 
     it('should throw a NotFoundException if patient does not exist', async () => {
