@@ -1,7 +1,7 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { Patient } from './entities/patient.entity';
 import { PatientsService } from './patients.service';
@@ -84,23 +84,30 @@ describe('PatientsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of users', async () => {
-      const user1 = new Patient();
-      user1.id = 1;
-      user1.email = 'test1@test.com';
+    it('should return an array of patients', async () => {
+      const patient1 = new Patient();
+      patient1.id = 1;
+      patient1.email = 'test1@test.com';
 
-      const user2 = new Patient();
-      user2.id = 2;
-      user2.email = 'test2@test.com';
+      const patient2 = new Patient();
+      patient2.id = 2;
+      patient2.email = 'test2@test.com';
 
-      const users = [user1, user2];
+      const patients = [patient1, patient2];
 
-      jest.spyOn(patientsRepository, 'find').mockResolvedValue(users);
+      const queryBuilder: SelectQueryBuilder<Patient> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        getMany: jest.fn().mockResolvedValue(patients),
+      } as any;
 
-      const allUsers = await patientsService.findAll();
+      jest.spyOn(patientsRepository, 'createQueryBuilder').mockReturnValue(queryBuilder);
 
-      expect(allUsers).toEqual(users);
-      expect(patientsRepository.find).toHaveBeenCalledTimes(1);
+      const allPatients = await patientsService.findAll();
+
+      expect(allPatients).toEqual(patients);
+      expect(patientsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith('patient.user', 'user');
+      expect(queryBuilder.getMany).toHaveBeenCalledTimes(1)
     });
   });
 
