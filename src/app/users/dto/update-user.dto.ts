@@ -1,30 +1,54 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsStrongPassword,
+  MaxLength,
+} from 'class-validator';
+import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { EnumRole } from '../enum/roles.enum';
 import { CreateUserDto } from './create-user.dto';
 
+//Obs: Reescrevi mesmo estendendo, para aparecer na docs swagger
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty({
     description: 'Nome do usuário',
     maxLength: 50,
     example: 'João Silva',
-    required: false,
   })
+  @IsAlphaSpaces({ message: 'nome inválido' })
+  @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
+  @Transform(({ value }) => value.toLowerCase())
   name?: string;
 
   @ApiProperty({
     description: 'E-mail do usuário',
     maxLength: 100,
     example: 'joao.silva@gmail.com',
-    required: false,
   })
+  @IsNotEmpty({ message: 'email deve ser preenchido' })
+  @IsEmail()
+  @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
+  @Transform(({ value }) => value.toLowerCase())
   email?: string;
 
   @ApiProperty({
     description: 'Senha do usuário',
     maxLength: 50,
     example: '!SenhaSegura123',
-    required: false,
+  })
+  @IsNotEmpty({ message: 'senha deve ser preenchido' })
+  @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
+  @IsStrongPassword({
+    minLength: 8,
+    minLowercase: 1,
+    minUppercase: 1,
+    minNumbers: 1,
+    minSymbols: 1,
   })
   password?: string;
 
@@ -34,5 +58,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     example: EnumRole.DOCTOR,
     required: false,
   })
+  @IsOptional()
+  @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR])
   role?: string;
 }

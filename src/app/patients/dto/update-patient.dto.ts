@@ -2,26 +2,28 @@ import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
-  IsDateString,
+  IsDate,
   IsEmail,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsString,
   MaxLength,
+  Min,
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
 import { EnumGender } from '../enum/gender.enum';
 import { CreatePatientDto } from './create-patient.dto';
 
+//Obs: Reescrevi mesmo estendendo, para aparecer na docs swagger
 export class UpdatePatientDto extends PartialType(CreatePatientDto) {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
   @IsNumber()
   @IsNotEmpty()
   userId?: number;
 
-  @ApiProperty({ description: 'Nome do paciente', example: 'John Doe' })
+  @ApiProperty({ description: 'Nome do paciente', example: 'Doctor House' })
   @IsAlphaSpaces({ message: 'nome inválido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
@@ -42,7 +44,7 @@ export class UpdatePatientDto extends PartialType(CreatePatientDto) {
 
   @ApiProperty({
     description: 'Email do paciente',
-    example: 'johndoe@example.com',
+    example: 'doctor@gmail.com',
   })
   @IsNotEmpty({ message: 'email deve ser preenchido' })
   @IsEmail()
@@ -54,7 +56,7 @@ export class UpdatePatientDto extends PartialType(CreatePatientDto) {
     description: 'Data de nascimento do paciente',
     example: '2000-01-01  - padrão ISO 8601',
   })
-  @IsDateString()
+  @IsDate()
   @IsNotEmpty()
   birthDate?: Date;
 
@@ -70,10 +72,12 @@ export class UpdatePatientDto extends PartialType(CreatePatientDto) {
   @ApiProperty({ description: 'Altura do paciente', example: 1.75 })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0.01)
   height?: number;
 
   @ApiProperty({ description: 'Peso do paciente', example: 70.5 })
   @IsNumber()
   @IsNotEmpty()
+  @Min(0.01)
   weight?: number;
 }
