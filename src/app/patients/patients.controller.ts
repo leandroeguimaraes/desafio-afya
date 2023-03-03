@@ -76,7 +76,7 @@ export class PatientsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(EnumRole.ADMIN)
+  @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Remove um paciente existente' })
   @ApiResponse({
     status: 200,
