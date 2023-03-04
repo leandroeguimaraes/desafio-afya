@@ -12,15 +12,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, swaggerCustomOptions);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen(port, () => {
     Logger.log(`Listening at port: ${port}`);
     Logger.log(process.env.NODE_ENV);
     Logger.log(
-      `Running in: ${
-        process.env.NODE_ENV ? process.env.NODE_ENV : 'production'
+      `Running in: ${process.env.NODE_ENV ? process.env.NODE_ENV : 'production'
       } mode`,
     );
   });

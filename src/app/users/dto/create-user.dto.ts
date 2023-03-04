@@ -19,7 +19,7 @@ export class CreateUserDto {
   })
   @IsAlphaSpaces({ message: 'nome inválido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ value }) => value.trim().toLowerCase())
   name: string;
 
   @ApiProperty({
@@ -30,7 +30,7 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'email deve ser preenchido' })
   @IsEmail({}, { message: 'email inválido' })
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
   @ApiProperty({

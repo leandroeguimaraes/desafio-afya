@@ -18,9 +18,8 @@ export class UpdateUserDto {
   })
   @IsAlphaSpaces({ message: 'nome inválido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @Transform(({ value }) => value.toLowerCase())
-  @IsOptional()
-  name?: string;
+  @Transform(({ value }) => value.trim().toLowerCase())
+  name: string;
 
   @ApiProperty({
     description: 'E-mail do usuário',
@@ -29,9 +28,8 @@ export class UpdateUserDto {
   })
   @IsEmail({}, { message: 'email inválido' })
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
-  @Transform(({ value }) => value.toLowerCase())
-  @IsOptional()
-  email?: string;
+  @Transform(({ value }) => value.trim().toLowerCase())
+  email: string;
 
   @ApiProperty({
     description: 'Senha do usuário',
@@ -49,8 +47,7 @@ export class UpdateUserDto {
     },
     { message: 'Deve ser uma senha forte' },
   )
-  @IsOptional()
-  password?: string;
+  password: string;
 
   @ApiProperty({
     description: 'Papel do usuário',
@@ -58,9 +55,8 @@ export class UpdateUserDto {
     example: EnumRole.DOCTOR,
     required: false,
   })
-  @IsOptional()
   @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR], {
     message: 'Deve ser admin ou doctor',
   })
-  role?: string;
+  role: string;
 }
