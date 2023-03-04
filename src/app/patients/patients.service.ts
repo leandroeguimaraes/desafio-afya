@@ -14,7 +14,7 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient)
     private patientsRepository: Repository<Patient>,
-  ) { }
+  ) {}
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     const { email } = createPatientDto;
@@ -29,8 +29,7 @@ export class PatientsService {
     return await this.patientsRepository.save(patient);
   }
 
-  async findAll(activeOnly: boolean = false): Promise<Patient[]> {
-
+  async findAll(activeOnly = false): Promise<Patient[]> {
     const query = this.patientsRepository
       .createQueryBuilder('patient')
       .leftJoinAndSelect('patient.user', 'user');
@@ -38,8 +37,10 @@ export class PatientsService {
     if (activeOnly) {
       query.andWhere(
         new Brackets((qb) => {
-          qb.where({ deletedAt: IsNull() }).orWhere({ deletedAt: Not(Equal('')) })
-        })
+          qb.where({ deletedAt: IsNull() }).orWhere({
+            deletedAt: Not(Equal('')),
+          });
+        }),
       );
     }
 

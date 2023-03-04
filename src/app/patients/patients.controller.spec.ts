@@ -125,7 +125,7 @@ describe('PatientsController', () => {
           deletedAt: null,
           user: null,
           schedules: [],
-          consultations: []
+          consultations: [],
         },
         {
           id: 2,
@@ -142,7 +142,7 @@ describe('PatientsController', () => {
           deletedAt: null,
           user: null,
           schedules: [],
-          consultations: []
+          consultations: [],
         },
       ];
 
@@ -171,7 +171,7 @@ describe('PatientsController', () => {
           deletedAt: null,
           user: null,
           schedules: [],
-          consultations: []
+          consultations: [],
         },
         {
           id: 3,
@@ -188,7 +188,7 @@ describe('PatientsController', () => {
           deletedAt: '2022-03-10T12:30:00Z',
           user: null,
           schedules: [],
-          consultations: []
+          consultations: [],
         },
       ];
 

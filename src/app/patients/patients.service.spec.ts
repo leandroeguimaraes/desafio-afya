@@ -280,13 +280,12 @@ describe('PatientsService', () => {
     patient.gender = 'Masculino';
     patient.height = 1.8;
     patient.weight = 75;
-    patient.deletedAt = null,
+    patient.deletedAt = null;
 
-
-      beforeEach(() => {
-        jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(patient);
-        jest.spyOn(patientsRepository, 'save').mockResolvedValue(null);
-      });
+    beforeEach(() => {
+      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(patient);
+      jest.spyOn(patientsRepository, 'save').mockResolvedValue(null);
+    });
 
     afterEach(() => {
       jest.restoreAllMocks();
@@ -297,7 +296,7 @@ describe('PatientsService', () => {
       const id = 1;
 
       await expect(patientsService.removeLGPD(id)).rejects.toThrow(
-        new NotFoundException(`Paciente com id ${id} não foi encontrado`)
+        new NotFoundException(`Paciente com id ${id} não foi encontrado`),
       );
     });
 
