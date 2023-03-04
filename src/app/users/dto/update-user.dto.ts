@@ -10,8 +10,8 @@ export class UpdateUserDto {
     maxLength: 50,
     example: 'João Silva',
   })
-  @IsAlphaSpaces({ message: 'nome inválido' })
-  @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
+  @IsAlphaSpaces({ message: 'name- nome inválido' })
+  @MaxLength(50, { message: 'name - nome deve ter menos de 50 caracteres' })
   @Transform(({ value }) => value.trim().toLowerCase())
   name: string;
 
@@ -21,7 +21,7 @@ export class UpdateUserDto {
     example: 'joao.silva@gmail.com',
   })
   @IsEmail({}, { message: 'email inválido' })
-  @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
+  @MaxLength(100, { message: 'email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
@@ -30,7 +30,7 @@ export class UpdateUserDto {
     maxLength: 50,
     example: '!SenhaSegura123',
   })
-  @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
+  @MaxLength(50, { message: 'password - nome deve ter menos de 50 caracteres' })
   @IsStrongPassword(
     {
       minLength: 8,
@@ -39,7 +39,7 @@ export class UpdateUserDto {
       minNumbers: 1,
       minSymbols: 1,
     },
-    { message: 'Deve ser uma senha forte' },
+    { message: 'password - deve ser uma senha forte' },
   )
   password: string;
 
@@ -50,7 +50,7 @@ export class UpdateUserDto {
     required: false,
   })
   @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR], {
-    message: 'Deve ser admin ou doctor',
+    message: 'role - deve ser admin ou doctor',
   })
   role: string;
 }

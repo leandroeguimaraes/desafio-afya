@@ -17,8 +17,8 @@ export class CreateUserDto {
     maxLength: 50,
     example: 'João Silva',
   })
-  @IsAlphaSpaces({ message: 'nome inválido' })
-  @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
+  @IsAlphaSpaces({ message: 'name - nome inválido' })
+  @MaxLength(50, { message: 'name - nome deve ter menos de 50 caracteres' })
   @Transform(({ value }) => value.trim().toLowerCase())
   name: string;
 
@@ -29,7 +29,7 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: 'email deve ser preenchido' })
   @IsEmail({}, { message: 'email inválido' })
-  @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
+  @MaxLength(100, { message: 'email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
@@ -38,8 +38,8 @@ export class CreateUserDto {
     maxLength: 50,
     example: '!SenhaSegura123',
   })
-  @IsNotEmpty({ message: 'senha deve ser preenchido' })
-  @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
+  @IsNotEmpty({ message: 'password - senha deve ser preenchido' })
+  @MaxLength(50, { message: 'password - O nome deve ter menos de 50 caracteres' })
   @IsStrongPassword(
     {
       minLength: 8,
@@ -48,7 +48,7 @@ export class CreateUserDto {
       minNumbers: 1,
       minSymbols: 1,
     },
-    { message: 'Deve ser uma senha forte' },
+    { message: 'password - deve ser uma senha forte' },
   )
   password: string;
 
@@ -60,7 +60,7 @@ export class CreateUserDto {
   })
   @IsOptional()
   @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR], {
-    message: 'Deve ser admin ou doctor',
+    message: 'role - deve ser admin ou doctor',
   })
   role: string;
 }
