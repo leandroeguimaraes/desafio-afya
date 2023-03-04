@@ -225,13 +225,20 @@ describe('PatientsController', () => {
   describe('update', () => {
     it('should update a patient', async () => {
       const updatePatientDto: UpdatePatientDto = {
-        name: 'Updated Name',
+        userId: 1,
+        name: 'updated name',
+        email: 'johndoe@test.com',
+        phone: '123456789',
+        birthDate: new Date('1990-01-01'),
+        gender: 'male',
+        height: 180,
+        weight: 80,
       };
 
       const patient = new Patient();
       patient.id = 1;
       patient.email = 'patient@gmail.com';
-      patient.name = 'patient';
+      patient.name = updatePatientDto.name;
 
       jest.spyOn(patientsService, 'update').mockResolvedValue(patient);
 
@@ -242,7 +249,14 @@ describe('PatientsController', () => {
 
     it('should throw a NotFoundException if patient does not exist', async () => {
       const updatePatientDto: UpdatePatientDto = {
-        name: 'Updated Name',
+        userId: 1,
+        name: 'updated name',
+        email: 'johndoe@test.com',
+        phone: '123456789',
+        birthDate: new Date('1990-01-01'),
+        gender: 'male',
+        height: 180,
+        weight: 80,
       };
       const id = '1';
 

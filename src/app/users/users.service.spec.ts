@@ -180,6 +180,7 @@ describe('UsersService', () => {
       user.role = EnumRole.DOCTOR;
 
       const updateUserDto = {
+        ...user,
         name: 'Doctor Who',
       };
 
@@ -197,7 +198,13 @@ describe('UsersService', () => {
     });
 
     it('should throw a NotFoundException if user with given id is not found', async () => {
+      const user = new User();
+      user.id = 1;
+      user.name = 'Doctor';
+      user.email = 'doctor@gmail.com';
+      user.role = EnumRole.DOCTOR;
       const updateUserDto = {
+        ...user,
         name: 'Doctor Who',
       };
 

@@ -6,7 +6,7 @@ import {
   Body,
   Param,
   UseGuards,
-  Patch,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -26,7 +26,7 @@ import { SchedulesService } from './schedules.service';
 @ApiTags('schedules')
 @Controller('schedules')
 export class SchedulesController {
-  constructor(private readonly schedulesService: SchedulesService) { }
+  constructor(private readonly schedulesService: SchedulesService) {}
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -78,7 +78,7 @@ export class SchedulesController {
     return this.schedulesService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza um agendamento existente' })

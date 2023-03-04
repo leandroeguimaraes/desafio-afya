@@ -9,9 +9,9 @@ import {
   MaxLength,
   IsDate,
   Min,
+  MinLength,
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
-import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
 import { EnumGender } from '../enum/gender.enum';
 
 export class CreatePatientDto {
@@ -24,20 +24,21 @@ export class CreatePatientDto {
   @ApiProperty({ description: 'Nome do paciente', example: 'John Doe' })
   @IsAlphaSpaces({ message: 'Nome inválido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ value }) => value.trim().toLowerCase())
   name: string;
 
   @ApiProperty({
     description: 'Telefone do paciente',
-    example: '+55 11 1234-5678',
+    example: '11992345678',
   })
   @IsString({ message: 'Deve ser uma string' })
+  @MinLength(10, {
+    message: 'O número de telefone não pode ter menos do que 10 dígitos',
+  })
   @MaxLength(11, {
     message: 'O número de telefone não pode ter mais do que 11 dígitos',
   })
-  @IsPhoneNumber({
-    message: 'O número de telefone deve conter apenas dígitos numéricos',
-  })
+  @Transform(({ value }) => value.trim())
   phone: string;
 
   @ApiProperty({
@@ -47,7 +48,7 @@ export class CreatePatientDto {
   @IsNotEmpty({ message: 'email deve ser preenchido' })
   @IsEmail({}, { message: 'email inválido' })
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
   @ApiProperty({

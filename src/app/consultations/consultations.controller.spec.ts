@@ -133,7 +133,15 @@ describe('ConsultationsController', () => {
   });
   describe('update', () => {
     it('should update a consultation', async () => {
+      const consultation = new Consultation();
+      consultation.id = 1;
+      consultation.userId = 1;
+      consultation.patientId = 1;
+      consultation.scheduleId = 1;
+      consultation.notes = 'Some notes';
+
       const updateConsultationDto: UpdateConsultationDto = {
+        ...consultation,
         notes: 'Novas notas sobre a consulta',
       };
 
@@ -157,7 +165,15 @@ describe('ConsultationsController', () => {
     });
 
     it('should throw a NotFoundException if consultation does not exist', async () => {
+      const consultation = new Consultation();
+      consultation.id = 1;
+      consultation.userId = 1;
+      consultation.patientId = 1;
+      consultation.scheduleId = 1;
+      consultation.notes = 'Some notes';
+
       const updateConsultationDto: UpdateConsultationDto = {
+        ...consultation,
         notes: 'Novas notas sobre a consulta',
       };
 

@@ -121,7 +121,14 @@ describe('SchedulesController', () => {
   });
   describe('update', () => {
     it('should update a schedule', async () => {
+      const schedule = new Schedule();
+      schedule.id = 1;
+      schedule.userId = 1;
+      schedule.patientId = 1;
+      schedule.date = new Date();
+
       const updateScheduleDto: UpdateScheduleDto = {
+        ...schedule,
         date: new Date('2022-03-03T10:00:00Z'),
       };
 
@@ -141,7 +148,14 @@ describe('SchedulesController', () => {
     });
 
     it('should throw a NotFoundException if schedule does not exist', async () => {
+      const schedule = new Schedule();
+      schedule.id = 1;
+      schedule.userId = 1;
+      schedule.patientId = 1;
+      schedule.date = new Date();
+
       const updateScheduleDto: UpdateScheduleDto = {
+        ...schedule,
         date: new Date('2022-03-03T10:00:00Z'),
       };
 

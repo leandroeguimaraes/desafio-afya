@@ -159,13 +159,16 @@ describe('UsersController', () => {
   describe('update', () => {
     it('should update a user', async () => {
       const updateUserDto: UpdateUserDto = {
-        name: 'Updated Name',
+        email: 'doctor@gmail.com',
+        name: 'updated name',
+        password: '!Teste123',
+        role: EnumRole.DOCTOR,
       };
 
       const user = new User();
       user.id = 1;
       user.email = 'doctor@gmail.com';
-      user.name = 'doctor';
+      user.name = updateUserDto.name;
 
       jest.spyOn(usersService, 'update').mockResolvedValue(user);
 
@@ -174,7 +177,10 @@ describe('UsersController', () => {
 
     it('should throw a NotFoundException if user does not exist', async () => {
       const updateUserDto: UpdateUserDto = {
-        name: 'Updated Name',
+        email: 'doctor@gmail.com',
+        name: 'updated name',
+        password: '!Teste123',
+        role: EnumRole.DOCTOR,
       };
       const id = '1';
 
