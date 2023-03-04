@@ -14,7 +14,7 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient)
     private patientsRepository: Repository<Patient>,
-  ) {}
+  ) { }
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     const { email } = createPatientDto;
@@ -48,10 +48,16 @@ export class PatientsService {
   }
 
   async findOne(id: number): Promise<Patient> {
-    const patient = await this.patientsRepository.findOneBy({ id });
+    const patient = await this.patientsRepository
+      .createQueryBuilder('patient')
+      .leftJoinAndSelect('patient.user', 'user')
+      .where('patient.id = :id', { id })
+      .getOne();
+
     if (!patient) {
       throw new NotFoundException(`Paciente com id ${id} não foi encontrado`);
     }
+
     return patient;
   }
 
@@ -70,10 +76,8 @@ export class PatientsService {
   }
 
   async removeLGPD(id: number): Promise<void> {
-    const patient = await this.patientsRepository.findOneBy({ id });
-    if (!patient) {
-      throw new NotFoundException(`Paciente com id ${id} não foi encontrado`);
-    }
+    const patient = await this.findOne(id);
+
     patient.deletedAt = new Date();
     patient.name = null;
     patient.email = null;

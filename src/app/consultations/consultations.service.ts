@@ -14,7 +14,7 @@ export class ConsultationsService {
   constructor(
     @InjectRepository(Consultation)
     private consultationsRepository: Repository<Consultation>,
-  ) {}
+  ) { }
 
   async create(
     createConsultationDto: CreateConsultationDto,
@@ -35,19 +35,27 @@ export class ConsultationsService {
 
   async findAll(): Promise<Consultation[]> {
     return this.consultationsRepository
-      .createQueryBuilder('consultations')
-      .leftJoinAndSelect('consultations.user', 'user')
-      .leftJoinAndSelect('consultations.schedule', 'schedule')
-      .leftJoinAndSelect('consultations.patient', 'patient')
+      .createQueryBuilder('consultation')
+      .leftJoinAndSelect('consultation.user', 'user')
+      .leftJoinAndSelect('consultation.schedule', 'schedule')
+      .leftJoinAndSelect('consultation.patient', 'patient')
       .getMany();
   }
 
   async findOne(id: number): Promise<Consultation> {
-    const consultation = await this.consultationsRepository.findOneBy({ id });
-    if (!consultation) {
+    const consultations = await this.consultationsRepository
+      .createQueryBuilder('consultation')
+      .leftJoinAndSelect('consultation.user', 'user')
+      .leftJoinAndSelect('consultation.schedule', 'schedule')
+      .leftJoinAndSelect('consultation.patient', 'patient')
+      .where('consultation.id = :id', { id })
+      .getOne();
+
+    if (!consultations) {
       throw new NotFoundException(`Consulta com id ${id} não foi encontrado`);
     }
-    return consultation;
+
+    return consultations;
   }
 
   async update(

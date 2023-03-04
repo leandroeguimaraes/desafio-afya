@@ -130,28 +130,71 @@ describe('SchedulesService', () => {
 
   describe('findOne', () => {
     it('should find a schedule', async () => {
-      const schedule = new Schedule();
-      schedule.id = 1;
-      schedule.userId = 1;
-      schedule.patientId = 1;
-      schedule.date = new Date();
+      const schedule1 = new Schedule();
+      schedule1.id = 1;
+      schedule1.userId = 1;
+      schedule1.patientId = 1;
+      schedule1.date = new Date();
 
-      jest.spyOn(schedulesRepository, 'findOneBy').mockResolvedValue(schedule);
 
-      const result = await schedulesService.findOne(1);
+      const queryBuilder: SelectQueryBuilder<Schedule> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockResolvedValue(schedule1),
+      } as any;
 
-      expect(schedulesRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
-      expect(result).toEqual(schedule);
-    });
+      jest
+        .spyOn(schedulesRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
 
-    it('should throw a NotFoundException if schedule does not exist', async () => {
-      jest.spyOn(schedulesRepository, 'findOneBy').mockResolvedValue(null);
+      const schedule = await schedulesService.findOne(schedule1.id);
 
-      await expect(schedulesService.findOne(1)).rejects.toThrow(
-        NotFoundException,
+      expect(schedule).toEqual(schedule1);
+      expect(schedulesRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'schedule.patient',
+        'patient',
       );
-      expect(schedulesRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'schedule.user',
+        'user',
+      );
+      expect(queryBuilder.where).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should throw a NotFoundException if schedule does not exist', async () => {
+    const schedule1 = new Schedule();
+    schedule1.id = 1;
+    schedule1.userId = 1;
+    schedule1.patientId = 1;
+    schedule1.date = new Date();
+
+    const queryBuilder: SelectQueryBuilder<Schedule> = {
+      leftJoinAndSelect: jest.fn().mockReturnThis(),
+      where: jest.fn().mockReturnThis(),
+      getOne: jest.fn().mockResolvedValue(null),
+    } as any;
+
+    jest
+      .spyOn(schedulesRepository, 'createQueryBuilder')
+      .mockReturnValue(queryBuilder);
+
+    await expect(schedulesService.findOne(schedule1.id)).rejects.toThrow(
+      NotFoundException,
+    );
+    expect(schedulesRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+    expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+      'schedule.patient',
+      'patient',
+    );
+    expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+      'schedule.user',
+      'user',
+    );
+    expect(queryBuilder.where).toHaveBeenCalledTimes(1);
+    expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
   });
 
   describe('update', () => {
@@ -168,7 +211,7 @@ describe('SchedulesService', () => {
       };
 
       jest
-        .spyOn(schedulesRepository, 'findOneBy')
+        .spyOn(schedulesService, 'findOne')
         .mockResolvedValueOnce(schedule);
 
       jest.spyOn(schedulesRepository, 'merge').mockReturnValueOnce(schedule);
@@ -194,7 +237,9 @@ describe('SchedulesService', () => {
         date: new Date('2021-01-01'),
       };
 
-      jest.spyOn(schedulesRepository, 'findOneBy').mockResolvedValueOnce(null);
+      jest.spyOn(schedulesService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Agendamento não foi encontrado`);
+      });
 
       await expect(
         schedulesService.update(1, updateScheduleDto),
@@ -225,8 +270,10 @@ describe('SchedulesService', () => {
 
     it('should throw a NotFoundException if the schedule does not exist', async () => {
       jest
-        .spyOn(schedulesRepository, 'findOneBy')
-        .mockResolvedValueOnce(undefined);
+        .spyOn(schedulesService, 'findOne')
+        .mockImplementation(() => {
+          throw new NotFoundException(`Agendamento não foi encontrado`);
+        });
 
       await expect(schedulesService.remove(1)).rejects.toThrow(
         NotFoundException,
