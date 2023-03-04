@@ -130,15 +130,15 @@ describe('ConsultationsService', () => {
         1,
       );
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
-        'consultations.user',
+        'consultation.user',
         'user',
       );
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
-        'consultations.schedule',
+        'consultation.schedule',
         'schedule',
       );
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
-        'consultations.patient',
+        'consultation.patient',
         'patient',
       );
       expect(queryBuilder.getMany).toHaveBeenCalledTimes(1);
@@ -146,30 +146,81 @@ describe('ConsultationsService', () => {
   });
   describe('findOne', () => {
     it('should find a consultation', async () => {
-      const consultation = new Consultation();
-      consultation.id = 1;
-      consultation.userId = 1;
-      consultation.patientId = 1;
-      consultation.scheduleId = 1;
-      consultation.notes = 'Some notes';
+      const consultation1 = new Consultation();
+      consultation1.id = 1;
+      consultation1.userId = 1;
+      consultation1.patientId = 1;
+      consultation1.scheduleId = 1;
+      consultation1.notes = 'Some notes';
+
+      const queryBuilder: SelectQueryBuilder<Consultation> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockResolvedValue(consultation1),
+      } as any;
 
       jest
-        .spyOn(consultationsRepository, 'findOneBy')
-        .mockResolvedValue(consultation);
+        .spyOn(consultationsRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
 
-      const result = await consultationsService.findOne(1);
+      const consultation = await consultationsService.findOne(consultation1.id);
 
-      expect(consultationsRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
-      expect(result).toEqual(consultation);
+      expect(consultation).toEqual(consultation);
+      expect(consultationsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'consultation.patient',
+        'patient',
+      );
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'consultation.user',
+        'user',
+      );
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'consultation.schedule',
+        'schedule',
+      );
+      expect(queryBuilder.where).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
+
     });
 
     it('should throw a NotFoundException if consultation does not exist', async () => {
-      jest.spyOn(consultationsRepository, 'findOneBy').mockResolvedValue(null);
+      const consultation1 = new Consultation();
+      consultation1.id = 1;
+      consultation1.userId = 1;
+      consultation1.patientId = 1;
+      consultation1.scheduleId = 1;
+      consultation1.notes = 'Some notes';
 
-      await expect(consultationsService.findOne(1)).rejects.toThrow(
+      const queryBuilder: SelectQueryBuilder<Consultation> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockResolvedValue(null),
+      } as any;
+
+      jest
+        .spyOn(consultationsRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
+
+      await expect(consultationsService.findOne(consultation1.id)).rejects.toThrow(
         NotFoundException,
       );
-      expect(consultationsRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
+
+      expect(consultationsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'consultation.patient',
+        'patient',
+      );
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'consultation.user',
+        'user',
+      );
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'consultation.schedule',
+        'schedule',
+      );
+      expect(queryBuilder.where).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
     });
   });
   describe('update', () => {
@@ -214,8 +265,10 @@ describe('ConsultationsService', () => {
 
     it('should throw a NotFoundException if consultation with given id is not found', async () => {
       jest
-        .spyOn(consultationsRepository, 'findOneBy')
-        .mockResolvedValueOnce(null);
+        .spyOn(consultationsService, 'findOne')
+        .mockImplementation(() => {
+          throw new NotFoundException(`Consulta não foi encontrado`);
+        });
 
       await expect(
         consultationsService.update(1, updateConsultationDto),
@@ -248,8 +301,10 @@ describe('ConsultationsService', () => {
 
     it('should throw a NotFoundException if the consultation does not exist', async () => {
       jest
-        .spyOn(consultationsRepository, 'findOneBy')
-        .mockResolvedValueOnce(undefined);
+        .spyOn(consultationsService, 'findOne')
+        .mockImplementation(() => {
+          throw new NotFoundException(`Consulta não foi encontrado`);
+        });
 
       await expect(consultationsService.remove(1)).rejects.toThrow(
         NotFoundException,

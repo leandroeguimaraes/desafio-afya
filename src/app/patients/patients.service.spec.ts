@@ -164,25 +164,60 @@ describe('PatientsService', () => {
 
   describe('findOne', () => {
     it('should find a patient', async () => {
-      const patient = new Patient();
-      patient.id = 1;
-      patient.email = 'patient@gmail.com';
+      const patient1 = new Patient();
+      patient1.id = 1;
+      patient1.email = 'test1@test.com';
 
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(patient);
 
-      const result = await patientsService.findOne(1);
+      const queryBuilder: SelectQueryBuilder<Patient> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockResolvedValue(patient1),
+      } as any;
 
-      expect(patientsRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
-      expect(result).toEqual(patient);
+      jest
+        .spyOn(patientsRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
+
+      const patient = await patientsService.findOne(patient1.id);
+
+      expect(patient).toEqual(patient1);
+      expect(patientsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'patient.user',
+        'user',
+      );
+      expect(queryBuilder.where).toHaveBeenCalled();
+      expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
     });
 
     it('should throw a NotFoundException if patient does not exist', async () => {
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(null);
+      const patient1 = new Patient();
+      patient1.id = 1;
+      patient1.email = 'test1@test.com';
 
-      await expect(patientsService.findOne(1)).rejects.toThrow(
+
+      const queryBuilder: SelectQueryBuilder<Patient> = {
+        leftJoinAndSelect: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        getOne: jest.fn().mockResolvedValue(null),
+      } as any;
+
+      jest
+        .spyOn(patientsRepository, 'createQueryBuilder')
+        .mockReturnValue(queryBuilder);
+
+
+      await expect(patientsService.findOne(patient1.id)).rejects.toThrow(
         NotFoundException,
       );
-      expect(patientsRepository.findOneBy).toHaveBeenCalledWith({ id: 1 });
+      expect(patientsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
+        'patient.user',
+        'user',
+      );
+      expect(queryBuilder.where).toHaveBeenCalledTimes(1);
+      expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -205,7 +240,7 @@ describe('PatientsService', () => {
       };
 
       jest
-        .spyOn(patientsRepository, 'findOneBy')
+        .spyOn(patientsService, 'findOne')
         .mockResolvedValueOnce(patient);
 
       jest.spyOn(patientsRepository, 'merge').mockReturnValueOnce(patient);
@@ -236,7 +271,9 @@ describe('PatientsService', () => {
         name: 'Patient Patient',
       };
 
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValueOnce(null);
+      jest.spyOn(patientsService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Paciente não foi encontrado`);
+      });
 
       await expect(patientsService.update(1, updatePatientDto)).rejects.toThrow(
         NotFoundException,
@@ -273,8 +310,10 @@ describe('PatientsService', () => {
 
     it('should throw a NotFoundException if the patient does not exist', async () => {
       jest
-        .spyOn(patientsRepository, 'findOneBy')
-        .mockResolvedValueOnce(undefined);
+        .spyOn(patientsService, 'findOne')
+        .mockImplementation(() => {
+          throw new NotFoundException(`Paciente não foi encontrado`);
+        });
 
       await expect(patientsService.remove(1)).rejects.toThrow(
         NotFoundException,
@@ -296,7 +335,7 @@ describe('PatientsService', () => {
     patient.deletedAt = null;
 
     beforeEach(() => {
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(patient);
+      jest.spyOn(patientsService, 'findOne').mockResolvedValue(patient);
       jest.spyOn(patientsRepository, 'save').mockResolvedValue(null);
     });
 
@@ -305,7 +344,9 @@ describe('PatientsService', () => {
     });
 
     it('should throw NotFoundException when patient is not found', async () => {
-      jest.spyOn(patientsRepository, 'findOneBy').mockResolvedValue(null);
+      jest.spyOn(patientsService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Paciente com id ${id} não foi encontrado`);
+      });
       const id = 1;
 
       await expect(patientsService.removeLGPD(id)).rejects.toThrow(
@@ -318,8 +359,8 @@ describe('PatientsService', () => {
 
       await patientsService.removeLGPD(id);
 
-      expect(patientsRepository.findOneBy).toHaveBeenCalledTimes(1);
-      expect(patientsRepository.findOneBy).toHaveBeenCalledWith({ id });
+      expect(patientsService.findOne).toHaveBeenCalledTimes(1);
+      expect(patientsService.findOne).toHaveBeenCalledWith(id);
 
       expect(patientsRepository.save).toHaveBeenCalledTimes(1);
       expect(patientsRepository.save).toHaveBeenCalledWith({

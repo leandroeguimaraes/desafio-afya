@@ -14,7 +14,7 @@ export class SchedulesService {
   constructor(
     @InjectRepository(Schedule)
     private schedulesRepository: Repository<Schedule>,
-  ) {}
+  ) { }
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
     const { userId, date } = createScheduleDto;
@@ -37,12 +37,17 @@ export class SchedulesService {
       .getMany();
   }
   async findOne(id: number): Promise<Schedule> {
-    const schedule = await this.schedulesRepository.findOneBy({ id });
+    const schedule = await this.schedulesRepository
+      .createQueryBuilder('schedule')
+      .leftJoinAndSelect('schedule.user', 'user')
+      .leftJoinAndSelect('schedule.patient', 'patient')
+      .where('schedule.id = :id', { id })
+      .getOne();
+
     if (!schedule) {
-      throw new NotFoundException(
-        `Agendamento com id ${id} não foi encontrado`,
-      );
+      throw new NotFoundException(`Agendamento com id ${id} não foi encontrado`);
     }
+
     return schedule;
   }
 
