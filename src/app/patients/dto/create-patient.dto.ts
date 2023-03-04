@@ -9,6 +9,8 @@ import {
   MaxLength,
   IsDate,
   Min,
+  IsISO8601,
+  IsDateString,
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
@@ -54,7 +56,7 @@ export class CreatePatientDto {
     example: '2000-01-01  - padrão ISO 8601',
     description: 'Data de nascimento do paciente',
   })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
   birthDate: Date;
 

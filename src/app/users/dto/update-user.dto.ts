@@ -20,6 +20,7 @@ export class UpdateUserDto {
   @IsAlphaSpaces({ message: 'nome inválido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
+  @IsOptional()
   name?: string;
 
   @ApiProperty({
@@ -27,10 +28,10 @@ export class UpdateUserDto {
     maxLength: 100,
     example: 'joao.silva@gmail.com',
   })
-  @IsNotEmpty({ message: 'email deve ser preenchido' })
   @IsEmail()
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
+  @IsOptional()
   email?: string;
 
   @ApiProperty({
@@ -38,7 +39,6 @@ export class UpdateUserDto {
     maxLength: 50,
     example: '!SenhaSegura123',
   })
-  @IsNotEmpty({ message: 'senha deve ser preenchido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
   @IsStrongPassword({
     minLength: 8,
@@ -47,6 +47,7 @@ export class UpdateUserDto {
     minNumbers: 1,
     minSymbols: 1,
   })
+  @IsOptional()
   password?: string;
 
   @ApiProperty({
