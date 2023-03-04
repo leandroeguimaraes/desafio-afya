@@ -200,6 +200,7 @@ describe('PatientsService', () => {
       patient.weight = 75;
 
       const updatePatientDto = {
+        ...patient,
         name: 'Patient Patient',
       };
 
@@ -219,7 +220,19 @@ describe('PatientsService', () => {
     });
 
     it('should throw a NotFoundException if patient with given id is not found', async () => {
+      const patient = new Patient();
+      patient.id = 1;
+      patient.userId = 1;
+      patient.name = 'Patient Pat';
+      patient.email = 'patient@gmail.com';
+      patient.phone = '21998876655';
+      patient.birthDate = new Date();
+      patient.gender = 'Masculino';
+      patient.height = 1.8;
+      patient.weight = 75;
+
       const updatePatientDto = {
+        ...patient,
         name: 'Patient Patient',
       };
 
