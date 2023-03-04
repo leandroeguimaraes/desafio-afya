@@ -13,27 +13,27 @@ export class CreateConsultationDto {
     description: 'Id do usuário que realizou a consulta',
     example: 1,
   })
-  @IsNumber({}, { message: 'Deve ser um número' })
-  @IsNotEmpty({ message: 'Deve ser preenchido' })
-  @Min(1, { message: 'O valor deve ser maior que zero' })
+  @IsNumber({}, { message: 'userId - deve ser um número' })
+  @IsNotEmpty({ message: 'userId - deve ser preenchido' })
+  @Min(1, { message: 'userId - o valor deve ser maior que zero' })
   userId: number;
 
   @ApiProperty({
     description: 'Id do paciente relacionado à consulta',
     example: 1,
   })
-  @IsNotEmpty({ message: 'Deve ser preenchido' })
-  @IsNumber({}, { message: 'Deve ser um número' })
-  @Min(1, { message: 'O valor deve ser maior que zero' })
+  @IsNotEmpty({ message: 'patientId - deve ser preenchido' })
+  @IsNumber({}, { message: 'patientId - deve ser um número' })
+  @Min(1, { message: 'patientId - o valor deve ser maior que zero' })
   patientId: number;
 
   @ApiProperty({
     description: 'Id do agendamento relacionado à consulta',
     example: 1,
   })
-  @IsNotEmpty({ message: 'Deve ser preenchido' })
-  @IsNumber({}, { message: 'Deve ser um número' })
-  @Min(1, { message: 'O valor deve ser maior que zero' })
+  @IsNotEmpty({ message: 'scheduleId - deve ser preenchido' })
+  @IsNumber({}, { message: 'scheduleId - deve ser um número' })
+  @Min(1, { message: 'scheduleId - o valor deve ser maior que zero' })
   scheduleId: number;
 
   @ApiProperty({
@@ -41,7 +41,7 @@ export class CreateConsultationDto {
     example: 'Paciente apresentou sintomas X, Y e Z',
     required: false,
   })
-  @IsString({ message: 'Deve ser uma string' })
+  @IsString({ message: 'notes - deve ser uma string' })
   @Transform(({ value }) => value.trim())
   @IsOptional()
   notes?: string;
