@@ -32,7 +32,9 @@ export class CreatePatientDto {
     example: '11992345678',
   })
   @IsString({ message: 'Deve ser uma string' })
-  @MinLength(10, { message: 'O número de telefone não pode ter menos do que 10 dígitos', })
+  @MinLength(10, {
+    message: 'O número de telefone não pode ter menos do que 10 dígitos',
+  })
   @MaxLength(11, {
     message: 'O número de telefone não pode ter mais do que 11 dígitos',
   })

@@ -37,7 +37,6 @@ describe('UpdateConsultationDto', () => {
 
       const errors = validateSync(consultationDto);
       expect(errors.length).toBe(0);
-
     });
     it('should throw an error if userId is not a number', () => {
       const consultationDto = new UpdateConsultationDto();
@@ -83,7 +82,6 @@ describe('UpdateConsultationDto', () => {
 
       const errors = validateSync(consultationDto);
       expect(errors.length).toBe(0);
-
     });
     it('should throw an error if patientId is not a number', () => {
       const consultationDto = new UpdateConsultationDto();
@@ -128,7 +126,6 @@ describe('UpdateConsultationDto', () => {
 
       const errors = validateSync(consultationDto);
       expect(errors.length).toBe(0);
-
     });
     it('should throw an error if scheduleId is not a number', () => {
       const consultationDto = new UpdateConsultationDto();
@@ -174,7 +171,6 @@ describe('UpdateConsultationDto', () => {
 
       const errors = validateSync(consultationDto);
       expect(errors.length).toBe(0);
-
     });
     it('should throw an error if notes is a number', () => {
       const consultationDto = new UpdateConsultationDto();
@@ -192,8 +188,8 @@ describe('UpdateConsultationDto', () => {
         userId: 1,
         patientId: 1,
         scheduleId: 1,
-        notes: '   Teste anotação  '
-      })
+        notes: '   Teste anotação  ',
+      });
       const errors = validateSync(userDto);
       expect(errors.length).toBe(0);
       expect(userDto.notes).toBe('Teste anotação');

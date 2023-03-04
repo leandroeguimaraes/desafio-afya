@@ -152,7 +152,7 @@ describe('SchedulesController', () => {
       schedule.id = 1;
       schedule.userId = 1;
       schedule.patientId = 1;
-      schedule.date = new Date()
+      schedule.date = new Date();
 
       const updateScheduleDto: UpdateScheduleDto = {
         ...schedule,

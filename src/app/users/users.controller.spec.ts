@@ -162,7 +162,7 @@ describe('UsersController', () => {
         email: 'doctor@gmail.com',
         name: 'updated name',
         password: '!Teste123',
-        role: EnumRole.DOCTOR
+        role: EnumRole.DOCTOR,
       };
 
       const user = new User();
@@ -180,7 +180,7 @@ describe('UsersController', () => {
         email: 'doctor@gmail.com',
         name: 'updated name',
         password: '!Teste123',
-        role: EnumRole.DOCTOR
+        role: EnumRole.DOCTOR,
       };
       const id = '1';
 

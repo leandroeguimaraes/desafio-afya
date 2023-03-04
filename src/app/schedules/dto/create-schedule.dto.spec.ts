@@ -63,7 +63,7 @@ describe('CreateScheduleDto', () => {
       const errors = validateSync(scheduleDto);
       expect(errors.length).toBe(0);
     });
-  })
+  });
   describe('patientId', () => {
     it('should not validate an invalid dto with invalid patientId', () => {
       const scheduleDto = new CreateScheduleDto();
@@ -73,7 +73,6 @@ describe('CreateScheduleDto', () => {
 
       const errors = validateSync(scheduleDto);
       expect(errors.length).toBe(1);
-
     });
 
     it('should validate a valid dto with valid patientId', () => {

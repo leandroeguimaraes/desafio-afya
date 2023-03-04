@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsNumber, IsString, Min } from 'class-validator';
 
 export class UpdateConsultationDto {
   @ApiProperty({

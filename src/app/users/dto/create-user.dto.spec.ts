@@ -1,7 +1,7 @@
 import { validateSync } from 'class-validator';
 import { CreateUserDto } from './create-user.dto';
 import { EnumRole } from '../enum/roles.enum';
-import { plainToClass, plainToInstance } from 'class-transformer';
+import { plainToClass } from 'class-transformer';
 
 describe('CreateUserDto', () => {
   it('should validate a valid dto', () => {
@@ -35,7 +35,6 @@ describe('CreateUserDto', () => {
     expect(errors.length).toBeGreaterThan(0);
   });
   it('should not validate an invalid dto with name with more than 50 chars', () => {
-
     const userDto = new CreateUserDto();
     userDto.name = 'a'.repeat(51);
     userDto.email = 'doctor@gmail.com';
@@ -50,8 +49,8 @@ describe('CreateUserDto', () => {
       name: '   Doctor House  ',
       email: 'doctor@gmail.com',
       password: 'StrongPassword123!',
-      role: EnumRole.DOCTOR
-    })
+      role: EnumRole.DOCTOR,
+    });
 
     const errors = validateSync(userDto);
     expect(errors.length).toBe(0);
@@ -68,7 +67,6 @@ describe('CreateUserDto', () => {
     expect(errors.length).toBeGreaterThan(0);
   });
   it('should not validate an invalid dto with email with more than 100 chars', () => {
-
     const userDto = new CreateUserDto();
     userDto.name = 'Doctor House';
     userDto.email = 'a'.repeat(100) + '@gmail.com';
@@ -83,8 +81,8 @@ describe('CreateUserDto', () => {
       name: 'Doctor House',
       email: '     DOCTOR@gmail.com        ',
       password: 'StrongPassword123!',
-      role: EnumRole.DOCTOR
-    })
+      role: EnumRole.DOCTOR,
+    });
     const errors = validateSync(userDto);
     expect(errors.length).toBe(0);
     expect(userDto.email).toBe('doctor@gmail.com');
@@ -104,7 +102,7 @@ describe('CreateUserDto', () => {
     userDto.name = 'Doctor House';
     userDto.email = 'doctor@gmail.com';
     userDto.password = 'StrongPassword123!';
-    userDto.role = "user";
+    userDto.role = 'user';
 
     const errors = validateSync(userDto);
     expect(errors.length).toBeGreaterThan(0);

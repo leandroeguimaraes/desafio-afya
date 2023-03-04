@@ -67,8 +67,8 @@ describe('CreatePatientDto', () => {
         birthDate: new Date('2000-01-01'),
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const errors = validateSync(patientDto);
       expect(errors.length).toBe(0);
@@ -93,8 +93,8 @@ describe('CreatePatientDto', () => {
         birthDate: new Date('2000-01-01'),
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const errors = validateSync(patientDto);
       expect(errors.length).toBe(0);
@@ -134,8 +134,8 @@ describe('CreatePatientDto', () => {
         birthDate: new Date('2000-01-01'),
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const classObject = plainToClass(CreatePatientDto, userDto);
       const errors = validateSync(classObject);
@@ -152,8 +152,8 @@ describe('CreatePatientDto', () => {
         birthDate: new Date('2000-01-01'),
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
       const errors = validateSync(userDto);
       expect(errors.length).toBe(0);
       expect(userDto.email).toBe('doctor@gmail.com');
@@ -199,8 +199,8 @@ describe('CreatePatientDto', () => {
         birthDate: '1990-01-01',
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
       const errors = validateSync(userDto);
 
       expect(errors.length).toBe(0);
@@ -216,8 +216,8 @@ describe('CreatePatientDto', () => {
         birthDate: '2023/01/2023',
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const errors = validateSync(userDto);
       expect(errors.length).toBeGreaterThan(0);
@@ -234,8 +234,8 @@ describe('CreatePatientDto', () => {
         birthDate: '2023-01-01',
         gender: '',
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const errors = validateSync(userDto);
 
@@ -252,8 +252,8 @@ describe('CreatePatientDto', () => {
         birthDate: '2023-01-01',
         gender: 'other',
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const errors = validateSync(userDto);
 
@@ -270,8 +270,8 @@ describe('CreatePatientDto', () => {
         birthDate: '2023-01-01',
         gender: EnumGender.MASCULINO,
         height: 1.75,
-        weight: 70.5
-      })
+        weight: 70.5,
+      });
 
       const errors = validateSync(userDto);
 
@@ -308,7 +308,7 @@ describe('CreatePatientDto', () => {
 
       const errors = validateSync(patientDto);
       expect(errors.length).toBeGreaterThan(0);
-    })
+    });
   });
   describe('weight', () => {
     it('should validate a valid dto with valid weight', () => {
@@ -339,7 +339,6 @@ describe('CreatePatientDto', () => {
 
       const errors = validateSync(patientDto);
       expect(errors.length).toBeGreaterThan(0);
-    })
+    });
   });
-
 });

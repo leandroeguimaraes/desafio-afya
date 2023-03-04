@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import {
-  IsEmail,
-  IsIn,
-  IsOptional,
-  IsStrongPassword,
-  MaxLength,
-} from 'class-validator';
+import { IsEmail, IsIn, IsStrongPassword, MaxLength } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { EnumRole } from '../enum/roles.enum';
 

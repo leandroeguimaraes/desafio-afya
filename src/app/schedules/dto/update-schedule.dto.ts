@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsDate, IsNumber, Min } from 'class-validator';
 
 export class UpdateScheduleDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })

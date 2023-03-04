@@ -26,7 +26,7 @@ import { SchedulesService } from './schedules.service';
 @ApiTags('schedules')
 @Controller('schedules')
 export class SchedulesController {
-  constructor(private readonly schedulesService: SchedulesService) { }
+  constructor(private readonly schedulesService: SchedulesService) {}
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
