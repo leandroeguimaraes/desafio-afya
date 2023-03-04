@@ -27,7 +27,7 @@ import { PatientsService } from './patients.service';
 @ApiTags('patients')
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) {}
+  constructor(private readonly patientsService: PatientsService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -105,7 +105,7 @@ export class PatientsController {
   async remove(@Param('id') id: string): Promise<void> {
     return this.patientsService.remove(+id);
   }
-  @Delete(':id')
+  @Delete('/lgpd/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Remove um paciente existente respeitando o LGPD' })
