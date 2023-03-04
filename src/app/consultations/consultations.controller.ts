@@ -30,7 +30,7 @@ export class ConsultationsController {
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
+  @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Cria uma nova consulta' })
   @ApiResponse({
     status: 201,
@@ -81,7 +81,7 @@ export class ConsultationsController {
 
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(EnumRole.ADMIN)
+  @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza uma consulta existente' })
   @ApiResponse({
     status: 200,

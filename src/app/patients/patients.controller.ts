@@ -105,7 +105,7 @@ export class PatientsController {
   async remove(@Param('id') id: string): Promise<void> {
     return this.patientsService.remove(+id);
   }
-  @Delete(':id')
+  @Delete('/lgpd/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Remove um paciente existente respeitando o LGPD' })

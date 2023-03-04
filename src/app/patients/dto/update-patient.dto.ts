@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
   IsEnum,
-  IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
   Min,
@@ -17,7 +17,7 @@ import { EnumGender } from '../enum/gender.enum';
 export class UpdatePatientDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
   userId?: number;
 
@@ -25,6 +25,7 @@ export class UpdatePatientDto {
   @IsAlphaSpaces({ message: 'nome inválido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
+  @IsOptional()
   name?: string;
 
   @ApiProperty({
@@ -38,13 +39,14 @@ export class UpdatePatientDto {
   @IsPhoneNumber({
     message: 'O número de telefone deve conter apenas dígitos numéricos',
   })
+  @IsOptional()
   phone?: string;
 
   @ApiProperty({
     description: 'Email do paciente',
     example: 'doctor@gmail.com',
   })
-  @IsNotEmpty({ message: 'email deve ser preenchido' })
+  @IsOptional()
   @IsEmail()
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
@@ -55,7 +57,8 @@ export class UpdatePatientDto {
     example: '2000-01-01  - padrão ISO 8601',
   })
   @IsDate()
-  @IsNotEmpty()
+  @Type(() => Date)
+  @IsOptional()
   birthDate?: Date;
 
   @ApiProperty({
@@ -64,18 +67,18 @@ export class UpdatePatientDto {
     example: EnumGender.MASCULINO,
   })
   @IsEnum([EnumGender.MASCULINO, EnumGender.FEMININO])
-  @IsNotEmpty()
+  @IsOptional()
   gender?: string;
 
   @ApiProperty({ description: 'Altura do paciente', example: 1.75 })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0.01)
   height?: number;
 
   @ApiProperty({ description: 'Peso do paciente', example: 70.5 })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0.01)
   weight?: number;
 }

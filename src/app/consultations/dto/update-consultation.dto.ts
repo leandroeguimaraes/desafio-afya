@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class UpdateConsultationDto {
   @ApiProperty({
@@ -7,7 +7,7 @@ export class UpdateConsultationDto {
     example: 1,
   })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
   userId?: number;
 
@@ -15,7 +15,7 @@ export class UpdateConsultationDto {
     description: 'Id do paciente relacionado à consulta',
     example: 1,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Min(0)
   patientId?: number;
@@ -24,7 +24,7 @@ export class UpdateConsultationDto {
     description: 'Id do agendamento relacionado à consulta',
     example: 1,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Min(0)
   scheduleId?: number;
@@ -35,5 +35,6 @@ export class UpdateConsultationDto {
     required: false,
   })
   @IsString()
+  @IsOptional()
   notes?: string;
 }

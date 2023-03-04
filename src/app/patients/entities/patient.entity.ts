@@ -70,15 +70,15 @@ export class Patient {
 
   @ApiProperty({ description: 'Data de criação do registro' })
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @ApiProperty({ description: 'Data de atualização do registro' })
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @ApiProperty({ description: 'Data de exclusão do registro' })
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  deletedAt: Date;
 
   @ApiProperty({
     type: () => User,

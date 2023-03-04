@@ -11,8 +11,8 @@ describe('User entity', () => {
     user.email = 'doctor@gmail.com';
     user.password = '!Teste123';
     user.role = EnumRole.DOCTOR;
-    user.createdAt = new Date().toDateString();
-    user.updatedAt = new Date().toDateString();
+    user.createdAt = new Date();
+    user.updatedAt = new Date();
     user.deletedAt = null;
     user.patients = null;
   });

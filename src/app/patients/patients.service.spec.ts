@@ -98,7 +98,7 @@ describe('PatientsService', () => {
       const patient2 = new Patient();
       patient2.id = 2;
       patient2.email = 'test2@test.com';
-      patient2.deletedAt = new Date().toISOString();
+      patient2.deletedAt = new Date();
 
       const patients = [patient1, patient2];
 
@@ -134,7 +134,7 @@ describe('PatientsService', () => {
       const patient2 = new Patient();
       patient2.id = 2;
       patient2.email = 'test2@test.com';
-      patient2.deletedAt = new Date().toISOString();
+      patient2.deletedAt = new Date();
 
       const patients = [patient1];
 
@@ -311,7 +311,7 @@ describe('PatientsService', () => {
       expect(patientsRepository.save).toHaveBeenCalledTimes(1);
       expect(patientsRepository.save).toHaveBeenCalledWith({
         ...patient,
-        deletedAt: expect.any(String),
+        deletedAt: expect.any(Date),
         name: null,
         email: null,
         phone: null,

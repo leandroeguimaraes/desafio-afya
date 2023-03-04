@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -55,6 +55,7 @@ export class CreatePatientDto {
     description: 'Data de nascimento do paciente',
   })
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   birthDate: Date;
 

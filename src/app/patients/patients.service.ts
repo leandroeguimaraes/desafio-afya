@@ -74,7 +74,7 @@ export class PatientsService {
     if (!patient) {
       throw new NotFoundException(`Paciente com id ${id} não foi encontrado`);
     }
-    patient.deletedAt = new Date().toISOString();
+    patient.deletedAt = new Date();
     patient.name = null;
     patient.email = null;
     patient.phone = null;

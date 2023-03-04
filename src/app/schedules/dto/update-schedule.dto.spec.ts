@@ -6,28 +6,26 @@ describe('UpdateScheduleDto', () => {
     const dto = new UpdateScheduleDto();
     dto.userId = 1;
     dto.patientId = 2;
-    dto.date = new Date();
+    dto.date = new Date('2020-01-01');
 
     const errors = validateSync(dto);
     expect(errors.length).toBe(0);
   });
 
-  it('should not validate an invalid dto with invalid userId', () => {
+  it('should validate an valid dto with valid userId', () => {
     const dto = new UpdateScheduleDto();
-    dto.userId = null;
-    dto.patientId = 2;
-    dto.date = new Date();
+    dto.userId = 1;
 
     const errors = validateSync(dto);
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(0);
   });
 
-  it('should not validate an invalid dto with invalid patientId', () => {
+  it('should validate an valid dto with valid patientId', () => {
     const dto = new UpdateScheduleDto();
-    dto.patientId = null;
+    dto.patientId = 1;
 
     const errors = validateSync(dto);
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(0);
   });
 
   it('should not validate an invalid dto with invalid date', () => {

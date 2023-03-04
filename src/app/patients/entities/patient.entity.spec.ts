@@ -13,8 +13,8 @@ describe('Patient entity', () => {
     patient.gender = 'Masculino';
     patient.height = 1.75;
     patient.weight = 70.5;
-    patient.createdAt = new Date().toDateString();
-    patient.updatedAt = new Date().toDateString();
+    patient.createdAt = new Date();
+    patient.updatedAt = new Date();
     patient.deletedAt = null;
     patient.user = null;
   });

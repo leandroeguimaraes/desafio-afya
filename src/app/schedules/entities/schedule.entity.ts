@@ -47,19 +47,19 @@ export class Schedule {
     description: 'Data de criação do agendamento',
   })
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @ApiProperty({
     description: 'Data da última atualização do agendamento',
   })
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @ApiProperty({
     description: 'Data de exclusão do agendamento',
   })
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  deletedAt: Date;
 
   @ApiProperty({
     description: 'Usuário associado ao agendamento',

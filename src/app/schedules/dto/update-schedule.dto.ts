@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNumber, IsOptional, Min } from 'class-validator';
 
 export class UpdateScheduleDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
   userId?: number;
 
@@ -13,7 +14,7 @@ export class UpdateScheduleDto {
     example: 5678,
   })
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   @Min(0)
   patientId?: number;
 
@@ -22,6 +23,7 @@ export class UpdateScheduleDto {
     example: '2000-01-01  - padrão ISO 8601',
   })
   @IsDate()
-  @IsNotEmpty()
+  @Type(() => Date)
+  @IsOptional()
   date?: Date;
 }

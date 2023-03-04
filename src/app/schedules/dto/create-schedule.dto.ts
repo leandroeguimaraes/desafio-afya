@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsDate, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class CreateScheduleDto {
@@ -22,6 +23,7 @@ export class CreateScheduleDto {
     example: '2000-01-01  - padrão ISO 8601',
   })
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   date: Date;
 }

@@ -16,8 +16,8 @@ describe('SchedulesController', () => {
     userId: 1,
     patientId: 1,
     date: new Date(),
-    createdAt: new Date().toDateString(),
-    updatedAt: new Date().toDateString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     deletedAt: null,
     patient: null,
     user: null,
@@ -128,7 +128,7 @@ describe('SchedulesController', () => {
       const updatedSchedule = {
         ...mockSchedule,
         ...updateScheduleDto,
-        updatedAt: new Date().toDateString(),
+        updatedAt: new Date(),
       };
 
       jest

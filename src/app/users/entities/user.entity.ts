@@ -45,21 +45,21 @@ export class User {
     description: 'Data de criação do usuário',
   })
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @ApiProperty({
     example: '2022-01-02 00:00:00',
     description: 'Data da última atualização do usuário',
   })
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @ApiProperty({
     example: '2022-01-03 00:00:00',
     description: 'Data de remoção do usuário',
   })
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  deletedAt: Date;
 
   @ApiProperty({
     type: () => [Patient],
