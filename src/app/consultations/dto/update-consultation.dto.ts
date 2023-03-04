@@ -6,9 +6,9 @@ export class UpdateConsultationDto {
     description: 'Id do usuário que realizou a consulta',
     example: 1,
   })
-  @IsNumber()
+  @IsNumber({}, { message: 'Deve ser um número' })
   @IsOptional()
-  @Min(0)
+  @Min(1, { message: 'O valor deve ser maior que zero' })
   userId?: number;
 
   @ApiProperty({
@@ -16,8 +16,8 @@ export class UpdateConsultationDto {
     example: 1,
   })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: 'Deve ser um número' })
+  @Min(1, { message: 'O valor deve ser maior que zero' })
   patientId?: number;
 
   @ApiProperty({
@@ -25,8 +25,8 @@ export class UpdateConsultationDto {
     example: 1,
   })
   @IsOptional()
-  @IsNumber()
-  @Min(0)
+  @IsNumber({}, { message: 'Deve ser um número' })
+  @Min(1, { message: 'O valor deve ser maior que zero' })
   scheduleId?: number;
 
   @ApiProperty({
@@ -34,7 +34,7 @@ export class UpdateConsultationDto {
     example: 'Paciente apresentou sintomas X, Y e Z',
     required: false,
   })
-  @IsString()
+  @IsString({ message: 'Deve ser uma string' })
   @IsOptional()
   notes?: string;
 }
