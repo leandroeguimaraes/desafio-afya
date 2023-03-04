@@ -163,6 +163,7 @@ describe('SchedulesService', () => {
       schedule.date = new Date();
 
       const updateScheduleDto = {
+        ...schedule,
         date: new Date('2021-01-01'),
       };
 
@@ -182,7 +183,14 @@ describe('SchedulesService', () => {
     });
 
     it('should throw a NotFoundException if schedule with given id is not found', async () => {
+      const schedule = new Schedule();
+      schedule.id = 1;
+      schedule.userId = 1;
+      schedule.patientId = 1;
+      schedule.date = new Date()
+
       const updateScheduleDto = {
+        ...schedule,
         date: new Date('2021-01-01'),
       };
 
