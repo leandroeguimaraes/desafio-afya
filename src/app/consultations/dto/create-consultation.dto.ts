@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsString, IsNotEmpty, IsNumber, Min, IsOptional } from 'class-validator';
 
 export class CreateConsultationDto {
   @ApiProperty({
@@ -35,5 +36,7 @@ export class CreateConsultationDto {
     required: false,
   })
   @IsString({ message: 'Deve ser uma string' })
+  @Transform(({ value }) => value.trim())
+  @IsOptional()
   notes?: string;
 }

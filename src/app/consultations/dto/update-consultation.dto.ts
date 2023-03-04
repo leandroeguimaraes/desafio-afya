@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class UpdateConsultationDto {
@@ -7,27 +8,24 @@ export class UpdateConsultationDto {
     example: 1,
   })
   @IsNumber({}, { message: 'Deve ser um número' })
-  @IsOptional()
   @Min(1, { message: 'O valor deve ser maior que zero' })
-  userId?: number;
+  userId: number;
 
   @ApiProperty({
     description: 'Id do paciente relacionado à consulta',
     example: 1,
   })
-  @IsOptional()
   @IsNumber({}, { message: 'Deve ser um número' })
   @Min(1, { message: 'O valor deve ser maior que zero' })
-  patientId?: number;
+  patientId: number;
 
   @ApiProperty({
     description: 'Id do agendamento relacionado à consulta',
     example: 1,
   })
-  @IsOptional()
   @IsNumber({}, { message: 'Deve ser um número' })
   @Min(1, { message: 'O valor deve ser maior que zero' })
-  scheduleId?: number;
+  scheduleId: number;
 
   @ApiProperty({
     description: 'Notas adicionais sobre a consulta',
@@ -35,6 +33,6 @@ export class UpdateConsultationDto {
     required: false,
   })
   @IsString({ message: 'Deve ser uma string' })
-  @IsOptional()
-  notes?: string;
+  @Transform(({ value }) => value.trim())
+  notes: string;
 }

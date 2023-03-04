@@ -173,7 +173,15 @@ describe('ConsultationsService', () => {
     });
   });
   describe('update', () => {
+    const consultation = new Consultation();
+    consultation.id = 1;
+    consultation.userId = 1;
+    consultation.patientId = 1;
+    consultation.scheduleId = 1;
+    consultation.notes = 'Some notes';
+
     const updateConsultationDto: UpdateConsultationDto = {
+      ...consultation,
       notes: 'Consulta atualizada',
     };
 
