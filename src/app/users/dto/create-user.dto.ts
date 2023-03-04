@@ -28,7 +28,7 @@ export class CreateUserDto {
     example: 'joao.silva@gmail.com',
   })
   @IsNotEmpty({ message: 'email deve ser preenchido' })
-  @IsEmail()
+  @IsEmail({}, { message: 'email inválido' })
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
   email: string;
@@ -40,13 +40,16 @@ export class CreateUserDto {
   })
   @IsNotEmpty({ message: 'senha deve ser preenchido' })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-    minSymbols: 1,
-  })
+  @IsStrongPassword(
+    {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    },
+    { message: 'Deve ser uma senha forte' },
+  )
   password: string;
 
   @ApiProperty({
@@ -56,6 +59,8 @@ export class CreateUserDto {
     required: false,
   })
   @IsOptional()
-  @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR])
+  @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR], {
+    message: 'Deve ser admin ou doctor',
+  })
   role: string;
 }

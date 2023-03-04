@@ -16,9 +16,9 @@ import { EnumGender } from '../enum/gender.enum';
 
 export class UpdatePatientDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
-  @IsNumber()
+  @IsNumber({}, { message: 'Deve ser um número' })
   @IsOptional()
-  @Min(0)
+  @Min(0, { message: 'O valor deve ser igual ou maior que zero' })
   userId?: number;
 
   @ApiProperty({ description: 'Nome do paciente', example: 'Doctor House' })
@@ -32,7 +32,7 @@ export class UpdatePatientDto {
     description: 'Telefone do paciente',
     example: '+55 11 1234-5678',
   })
-  @IsString()
+  @IsString({ message: 'Deve ser uma string' })
   @MaxLength(11, {
     message: 'O número de telefone não pode ter mais do que 11 dígitos',
   })
@@ -47,7 +47,7 @@ export class UpdatePatientDto {
     example: 'doctor@gmail.com',
   })
   @IsOptional()
-  @IsEmail()
+  @IsEmail({}, { message: 'email inválido' })
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
   email?: string;
@@ -56,7 +56,7 @@ export class UpdatePatientDto {
     description: 'Data de nascimento do paciente',
     example: '2000-01-01  - padrão ISO 8601',
   })
-  @IsDate()
+  @IsDate({ message: 'Data inválida, deve seguir o padrão ISO 8601' })
   @Type(() => Date)
   @IsOptional()
   birthDate?: Date;
@@ -71,14 +71,14 @@ export class UpdatePatientDto {
   gender?: string;
 
   @ApiProperty({ description: 'Altura do paciente', example: 1.75 })
-  @IsNumber()
+  @IsNumber({}, { message: 'Deve ser um número' })
   @IsOptional()
-  @Min(0.01)
+  @Min(1, { message: 'O valor deve ser maior que zero' })
   height?: number;
 
   @ApiProperty({ description: 'Peso do paciente', example: 70.5 })
-  @IsNumber()
+  @IsNumber({}, { message: 'Deve ser um número' })
   @IsOptional()
-  @Min(0.01)
+  @Min(1, { message: 'O valor deve ser maior que zero' })
   weight?: number;
 }

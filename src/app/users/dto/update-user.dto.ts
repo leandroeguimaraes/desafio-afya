@@ -27,7 +27,7 @@ export class UpdateUserDto {
     maxLength: 100,
     example: 'joao.silva@gmail.com',
   })
-  @IsEmail()
+  @IsEmail({}, { message: 'email inválido' })
   @MaxLength(100, { message: 'O email deve ter menos de 100 caracteres' })
   @Transform(({ value }) => value.toLowerCase())
   @IsOptional()
@@ -39,13 +39,16 @@ export class UpdateUserDto {
     example: '!SenhaSegura123',
   })
   @MaxLength(50, { message: 'O nome deve ter menos de 50 caracteres' })
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minUppercase: 1,
-    minNumbers: 1,
-    minSymbols: 1,
-  })
+  @IsStrongPassword(
+    {
+      minLength: 8,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    },
+    { message: 'Deve ser uma senha forte' },
+  )
   @IsOptional()
   password?: string;
 
@@ -56,6 +59,8 @@ export class UpdateUserDto {
     required: false,
   })
   @IsOptional()
-  @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR])
+  @IsIn([EnumRole.ADMIN, EnumRole.DOCTOR], {
+    message: 'Deve ser admin ou doctor',
+  })
   role?: string;
 }
