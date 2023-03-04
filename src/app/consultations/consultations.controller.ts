@@ -2,11 +2,11 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Body,
   Param,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -26,7 +26,7 @@ import { Consultation } from './entities/consultation.entity';
 @ApiTags('consultations')
 @Controller('consultations')
 export class ConsultationsController {
-  constructor(private readonly consultationsService: ConsultationsService) {}
+  constructor(private readonly consultationsService: ConsultationsService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -79,7 +79,7 @@ export class ConsultationsController {
     return this.consultationsService.findOne(+id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza uma consulta existente' })
