@@ -6,7 +6,7 @@ import {
   Body,
   Param,
   UseGuards,
-  Patch,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -79,7 +79,7 @@ export class ConsultationsController {
     return this.consultationsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza uma consulta existente' })

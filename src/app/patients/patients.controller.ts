@@ -7,7 +7,7 @@ import {
   Param,
   UseGuards,
   Query,
-  Patch,
+  Put,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -74,7 +74,7 @@ export class PatientsController {
     return this.patientsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza um paciente existente' })
