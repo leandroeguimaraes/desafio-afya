@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -54,8 +55,8 @@ export class PatientsController {
     isArray: true,
   })
   @ApiBearerAuth()
-  async findAll(): Promise<Patient[]> {
-    return this.patientsService.findAll();
+  async findAll(@Query('activeOnly') activeOnly: boolean): Promise<Patient[]> {
+    return this.patientsService.findAll(activeOnly);
   }
 
   @Get(':id')
@@ -93,7 +94,7 @@ export class PatientsController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
+  @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Remove um paciente existente' })
   @ApiResponse({
     status: 200,
@@ -102,6 +103,19 @@ export class PatientsController {
   @ApiResponse({ status: 404, description: 'O paciente não foi encontrado.' })
   @ApiBearerAuth()
   async remove(@Param('id') id: string): Promise<void> {
+    return this.patientsService.remove(+id);
+  }
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
+  @ApiOperation({ summary: 'Remove um paciente existente respeitando o LGPD' })
+  @ApiResponse({
+    status: 200,
+    description: 'O paciente foi removido com sucesso.',
+  })
+  @ApiResponse({ status: 404, description: 'O paciente não foi encontrado.' })
+  @ApiBearerAuth()
+  async removeLGPD(@Param('id') id: string): Promise<void> {
     return this.patientsService.remove(+id);
   }
 }

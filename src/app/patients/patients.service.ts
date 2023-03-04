@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Brackets, Equal, IsNull, Not, Repository } from 'typeorm';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
@@ -29,11 +29,22 @@ export class PatientsService {
     return await this.patientsRepository.save(patient);
   }
 
-  async findAll(): Promise<Patient[]> {
-    return await this.patientsRepository
+  async findAll(activeOnly = false): Promise<Patient[]> {
+    const query = this.patientsRepository
       .createQueryBuilder('patient')
-      .leftJoinAndSelect('patient.user', 'user')
-      .getMany();
+      .leftJoinAndSelect('patient.user', 'user');
+
+    if (activeOnly) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.where({ deletedAt: IsNull() }).orWhere({
+            deletedAt: Not(Equal('')),
+          });
+        }),
+      );
+    }
+
+    return await query.getMany();
   }
 
   async findOne(id: number): Promise<Patient> {
@@ -56,5 +67,22 @@ export class PatientsService {
   async remove(id: number): Promise<void> {
     await this.findOne(id);
     await this.patientsRepository.delete(id);
+  }
+
+  async removeLGPD(id: number): Promise<void> {
+    const patient = await this.patientsRepository.findOneBy({ id });
+    if (!patient) {
+      throw new NotFoundException(`Paciente com id ${id} não foi encontrado`);
+    }
+    patient.deletedAt = new Date().toISOString();
+    patient.name = null;
+    patient.email = null;
+    patient.phone = null;
+    patient.birthDate = null;
+    patient.gender = null;
+    patient.height = null;
+    patient.weight = null;
+
+    await this.patientsRepository.save(patient);
   }
 }
