@@ -17,8 +17,8 @@ describe('ConsultationsController', () => {
     patientId: 1,
     scheduleId: 1,
     notes: 'Consulta de rotina',
-    createdAt: new Date().toDateString(),
-    updatedAt: new Date().toDateString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     deletedAt: null,
     patient: null,
     user: null,
@@ -140,7 +140,7 @@ describe('ConsultationsController', () => {
       const updatedConsultation = {
         ...mockConsultation,
         ...updateConsultationDto,
-        updatedAt: new Date().toDateString(),
+        updatedAt: new Date(),
       };
 
       jest

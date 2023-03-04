@@ -221,8 +221,8 @@ describe('ConsultationsService', () => {
       consultation.userId = 1;
       consultation.patientId = 1;
       consultation.scheduleId = 1;
-      consultation.createdAt = new Date().toISOString();
-      consultation.updatedAt = new Date().toISOString();
+      consultation.createdAt = new Date();
+      consultation.updatedAt = new Date();
       consultation.deletedAt = null;
 
       const findOneSpy = jest

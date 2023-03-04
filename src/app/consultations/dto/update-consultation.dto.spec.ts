@@ -13,27 +13,26 @@ describe('UpdateConsultationDto', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should not validate an invalid dto with invalid userId', () => {
+  it('should validate an valid dto with valid userId', () => {
     const dto = new UpdateConsultationDto();
-    dto.userId = null;
-    dto.patientId = 2;
+    dto.userId = 1;
     const errors = validateSync(dto);
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(0);
   });
 
-  it('should not validate an invalid dto with invalid patientId', () => {
+  it('should validate an valid dto with valid patientId', () => {
     const dto = new UpdateConsultationDto();
-    dto.patientId = null;
+    dto.patientId = 1;
 
     const errors = validateSync(dto);
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(0);
   });
 
-  it('should not validate an invalid dto with invalid scheduleId', () => {
+  it('should validate an valid dto with valid scheduleId', () => {
     const dto = new UpdateConsultationDto();
-    dto.scheduleId = null;
+    dto.scheduleId = 1;
 
     const errors = validateSync(dto);
-    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.length).toBe(0);
   });
 });

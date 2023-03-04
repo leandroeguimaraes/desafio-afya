@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsNotEmpty, IsNumber, Min } from 'class-validator';
 
 export class CreateScheduleDto {
   @ApiProperty({ description: 'Id do usuário', example: 1234 })
@@ -21,7 +22,8 @@ export class CreateScheduleDto {
     description: 'Data do agendamento',
     example: '2000-01-01  - padrão ISO 8601',
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   date: Date;
 }

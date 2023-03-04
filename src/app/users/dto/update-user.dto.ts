@@ -3,7 +3,6 @@ import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsIn,
-  IsNotEmpty,
   IsOptional,
   IsStrongPassword,
   MaxLength,

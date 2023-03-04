@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -9,8 +9,6 @@ import {
   MaxLength,
   IsDate,
   Min,
-  IsISO8601,
-  IsDateString,
 } from 'class-validator';
 import { IsAlphaSpaces } from 'src/common/custom-decorator/validation/is-alpha-spaces.valid';
 import { IsPhoneNumber } from 'src/common/custom-decorator/validation/is-phone-number.valid';
@@ -56,7 +54,8 @@ export class CreatePatientDto {
     example: '2000-01-01  - padrão ISO 8601',
     description: 'Data de nascimento do paciente',
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   birthDate: Date;
 

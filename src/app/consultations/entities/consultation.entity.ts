@@ -35,15 +35,15 @@ export class Consultation {
 
   @ApiProperty({ description: 'Data de criação da consulta' })
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: string;
+  createdAt: Date;
 
   @ApiProperty({ description: 'Data da última atualização da consulta' })
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: string;
+  updatedAt: Date;
 
   @ApiProperty({ description: 'Data de exclusão da consulta' })
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: string;
+  deletedAt: Date;
 
   @ApiProperty({
     description: 'Agendamento associado à consulta',

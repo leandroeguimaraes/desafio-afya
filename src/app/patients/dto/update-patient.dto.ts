@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
-  IsDateString,
+  IsDate,
   IsEmail,
   IsEnum,
   IsNumber,
@@ -56,7 +56,8 @@ export class UpdatePatientDto {
     description: 'Data de nascimento do paciente',
     example: '2000-01-01  - padrão ISO 8601',
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsOptional()
   birthDate?: Date;
 
