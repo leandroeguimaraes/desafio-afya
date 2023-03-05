@@ -65,14 +65,14 @@ export class Schedule {
     description: 'Usuário associado ao agendamento',
     type: () => User,
   })
-  @ManyToOne(() => User, (user) => user.schedules)
+  @ManyToOne(() => User, (user) => user.schedules, { onDelete: "CASCADE" })
   user: User;
 
   @ApiProperty({
     description: 'Paciente associado ao agendamento',
     type: () => Patient,
   })
-  @ManyToOne(() => Patient, (patient) => patient.schedules)
+  @ManyToOne(() => Patient, (patient) => patient.schedules, { onDelete: 'CASCADE' })
   patient: Patient;
 
   @ApiProperty({
