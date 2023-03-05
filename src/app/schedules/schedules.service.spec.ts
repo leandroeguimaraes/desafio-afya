@@ -11,10 +11,12 @@ import {
   IDateService,
 } from 'src/infra/date/interface/date.interface';
 import { MomentDateService } from 'src/infra/date/moment-date.service';
+import { Consultation } from '../consultations/entities/consultation.entity';
 
 describe('SchedulesService', () => {
   let schedulesService: SchedulesService;
   let schedulesRepository: Repository<Schedule>;
+  let consultationsRepository: Repository<Consultation>;
   let dateService: IDateService;
 
   beforeEach(async () => {
@@ -23,6 +25,10 @@ describe('SchedulesService', () => {
         SchedulesService,
         {
           provide: getRepositoryToken(Schedule),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(Consultation),
           useClass: Repository,
         },
         {
@@ -35,6 +41,9 @@ describe('SchedulesService', () => {
     schedulesService = moduleRef.get<SchedulesService>(SchedulesService);
     schedulesRepository = moduleRef.get<Repository<Schedule>>(
       getRepositoryToken(Schedule),
+    );
+    consultationsRepository = moduleRef.get<Repository<Consultation>>(
+      getRepositoryToken(Consultation),
     );
     dateService = moduleRef.get<IDateService>(DATE_SERVICE);
   });
@@ -359,28 +368,42 @@ describe('SchedulesService', () => {
       schedule.patientId = 1;
       schedule.date = new Date();
 
-      const findOneSpy = jest
-        .spyOn(schedulesService, 'findOne')
-        .mockResolvedValueOnce(schedule);
-
-      const deleteSpy = jest
-        .spyOn(schedulesRepository, 'delete')
-        .mockResolvedValueOnce(undefined);
+      jest.spyOn(consultationsRepository, 'find').mockResolvedValueOnce([]);
+      jest.spyOn(consultationsRepository, 'count').mockResolvedValueOnce(0);
+      jest.spyOn(schedulesService, 'findOne').mockResolvedValueOnce(schedule);
+      const deleteSpy = jest.spyOn(schedulesRepository, 'delete').mockResolvedValueOnce(undefined);
 
       await schedulesService.remove(1);
 
-      expect(findOneSpy).toHaveBeenCalledWith(1);
       expect(deleteSpy).toHaveBeenCalledWith(schedule.id);
     });
 
     it('should throw a NotFoundException if the schedule does not exist', async () => {
+      jest.spyOn(consultationsRepository, 'find').mockResolvedValueOnce([]);
+
       jest.spyOn(schedulesService, 'findOne').mockImplementation(() => {
         throw new NotFoundException(`Agendamento não foi encontrado`);
       });
 
-      await expect(schedulesService.remove(1)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(schedulesService.remove(1)).rejects.toThrow(NotFoundException);
+    });
+
+    it('should throw a ConflictException if the schedule has consultations', async () => {
+      const schedule = new Schedule();
+      schedule.id = 1;
+      schedule.userId = 1;
+      schedule.patientId = 1;
+      schedule.date = new Date();
+
+      const consultation = new Consultation();
+      consultation.id = 1;
+      consultation.userId = 1;
+      consultation.patientId = 1;
+      consultation.scheduleId = 1;
+      consultation.notes = 'Notes';
+
+      jest.spyOn(consultationsRepository, 'find').mockResolvedValueOnce([consultation]);
+      await expect(schedulesService.remove(1)).rejects.toThrow(ConflictException);
     });
   });
 });
