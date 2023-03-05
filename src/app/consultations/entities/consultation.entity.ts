@@ -49,7 +49,9 @@ export class Consultation {
     description: 'Agendamento associado à consulta',
     type: () => Schedule,
   })
-  @ManyToOne(() => Schedule, (schedule) => schedule.consultations)
+  @ManyToOne(() => Schedule, (schedule) => schedule.consultations, {
+    onDelete: 'CASCADE',
+  })
   schedule: Schedule;
 
   @ApiProperty({
