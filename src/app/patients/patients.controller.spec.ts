@@ -47,6 +47,7 @@ describe('PatientsController', () => {
             findOne: jest.fn(() => Promise.resolve(mockPatient)),
             update: jest.fn(() => Promise.resolve(mockPatient)),
             remove: jest.fn(() => Promise.resolve()),
+            removeLGPD: jest.fn(() => Promise.resolve()),
           },
         },
         {
@@ -240,6 +241,26 @@ describe('PatientsController', () => {
       });
 
       await expect(patientsController.remove('1')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+  describe('removeLGPD', () => {
+    it('should remove a patient', async () => {
+      const id = '1';
+
+      jest.spyOn(patientsService, 'removeLGPD').mockResolvedValueOnce();
+
+      await patientsController.removeLGPD(id);
+      expect(patientsService.removeLGPD).toHaveBeenCalledWith(Number(id));
+    });
+
+    it('should throw a NotFoundException if patient does not exist', async () => {
+      jest.spyOn(patientsService, 'removeLGPD').mockRejectedValueOnce(() => {
+        throw new NotFoundException(`Paciente com id 1 não foi encontrado`);
+      });
+
+      await expect(patientsController.removeLGPD('1')).rejects.toThrow(
         NotFoundException,
       );
     });

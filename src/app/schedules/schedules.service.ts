@@ -23,7 +23,7 @@ export class SchedulesService {
     @InjectRepository(Consultation)
     private consultationsRepository: Repository<Consultation>,
     @Inject(DATE_SERVICE) private dateService: IDateService,
-  ) { }
+  ) {}
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
     const { userId, patientId, date } = createScheduleDto;
@@ -100,7 +100,6 @@ export class SchedulesService {
   }
 
   async remove(id: number): Promise<void> {
-
     const consultations = await this.consultationsRepository.find({
       where: {
         scheduleId: id,
@@ -109,9 +108,15 @@ export class SchedulesService {
     });
 
     if (consultations.length > 0) {
-      throw new ConflictException('Não é possível remover um agendamento que possui consultas associadas');
+      throw new ConflictException(
+        'Não é possível remover um agendamento que possui consultas associadas',
+      );
     }
 
+    await this.findOne(id);
+    await this.schedulesRepository.delete(id);
+  }
+  async removeAdmin(id: number): Promise<void> {
     await this.findOne(id);
     await this.schedulesRepository.delete(id);
   }

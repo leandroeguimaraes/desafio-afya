@@ -25,11 +25,11 @@ import {
 
 @ApiTags('users')
 @ApiExtraModels(CreateUserDto, UpdateUserDto)
-@Controller('users')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('admin/users')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -44,7 +44,7 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
-  @Get()
+  @Get('admin/users')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -58,7 +58,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
+  @Get('admin/users/:id')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -73,7 +73,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @Get('email/:email')
+  @Get('admin/users/email/:email')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -89,7 +89,7 @@ export class UsersController {
     return user;
   }
 
-  @Put(':id')
+  @Put('admin/users/:id')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
@@ -104,7 +104,7 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('admin/users/:id')
   @UseGuards(JwtAuthGuard)
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)

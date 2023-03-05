@@ -84,7 +84,7 @@ export class Patient {
     type: () => User,
     description: 'Usuário que criou o registro',
   })
-  @ManyToOne(() => User, (user) => user.patients, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.patients, { onDelete: 'CASCADE' })
   user: User;
 
   @ApiProperty({

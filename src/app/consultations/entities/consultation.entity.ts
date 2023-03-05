@@ -56,13 +56,15 @@ export class Consultation {
     description: 'Paciente associado à consulta',
     type: () => Patient,
   })
-  @ManyToOne(() => Patient, (patient) => patient.consultations, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Patient, (patient) => patient.consultations, {
+    onDelete: 'CASCADE',
+  })
   patient: Patient;
 
   @ApiProperty({
     description: 'Usuário associado à consulta',
     type: () => User,
   })
-  @ManyToOne(() => User, (user) => user.consultations, { onDelete: "CASCADE" })
+  @ManyToOne(() => User, (user) => user.consultations, { onDelete: 'CASCADE' })
   user: User;
 }

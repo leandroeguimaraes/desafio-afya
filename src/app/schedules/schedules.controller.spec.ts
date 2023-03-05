@@ -42,6 +42,7 @@ describe('SchedulesController', () => {
             findOne: jest.fn(() => Promise.resolve(mockSchedule)),
             update: jest.fn(() => Promise.resolve(mockSchedule)),
             remove: jest.fn(() => Promise.resolve()),
+            removeAdmin: jest.fn(() => Promise.resolve()),
           },
         },
         {
@@ -188,6 +189,29 @@ describe('SchedulesController', () => {
       });
 
       await expect(schedulesController.remove(id)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
+  describe('removeAdmin', () => {
+    it('should remove a schedule', async () => {
+      const id = '1';
+      jest.spyOn(schedulesService, 'removeAdmin').mockResolvedValueOnce();
+
+      await schedulesController.removeAdmin(id);
+
+      expect(schedulesService.removeAdmin).toHaveBeenCalledWith(Number(id));
+    });
+
+    it('should throw a NotFoundException if schedule does not exist', async () => {
+      const id = '1';
+      jest.spyOn(schedulesService, 'removeAdmin').mockRejectedValueOnce(() => {
+        throw new NotFoundException(
+          `Agendamento com id ${id} não foi encontrado`,
+        );
+      });
+
+      await expect(schedulesController.removeAdmin(id)).rejects.toThrow(
         NotFoundException,
       );
     });
