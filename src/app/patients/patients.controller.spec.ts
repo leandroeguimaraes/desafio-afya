@@ -244,4 +244,24 @@ describe('PatientsController', () => {
       );
     });
   });
+  describe('removeLGPD', () => {
+    it('should remove a patient', async () => {
+      const id = '1';
+
+      jest.spyOn(patientsService, 'removeLGPD').mockResolvedValueOnce();
+
+      await patientsController.remove(id);
+      expect(patientsService.remove).toHaveBeenCalledWith(Number(id));
+    });
+
+    it('should throw a NotFoundException if patient does not exist', async () => {
+      jest.spyOn(patientsService, 'removeLGPD').mockRejectedValueOnce(() => {
+        throw new NotFoundException(`Paciente com id 1 não foi encontrado`);
+      });
+
+      await expect(patientsController.remove('1')).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
 });
