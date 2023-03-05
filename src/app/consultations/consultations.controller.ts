@@ -24,11 +24,11 @@ import { UpdateConsultationDto } from './dto/update-consultation.dto';
 import { Consultation } from './entities/consultation.entity';
 
 @ApiTags('consultations')
-@Controller('consultations')
+@Controller()
 export class ConsultationsController {
-  constructor(private readonly consultationsService: ConsultationsService) {}
+  constructor(private readonly consultationsService: ConsultationsService) { }
 
-  @Post()
+  @Post('admin/consultations')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Cria uma nova consulta' })
@@ -45,7 +45,7 @@ export class ConsultationsController {
     return this.consultationsService.create(createConsultationDto);
   }
 
-  @Get()
+  @Get('consultations')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Obter todas as consultas' })
@@ -60,7 +60,7 @@ export class ConsultationsController {
     return this.consultationsService.findAll();
   }
 
-  @Get(':id')
+  @Get('consultations/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Obter uma consulta específica' })
@@ -79,7 +79,7 @@ export class ConsultationsController {
     return this.consultationsService.findOne(+id);
   }
 
-  @Put(':id')
+  @Put('consultations/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza uma consulta existente' })
@@ -100,7 +100,7 @@ export class ConsultationsController {
     return this.consultationsService.update(+id, updateConsultationDto);
   }
 
-  @Delete(':id')
+  @Delete('admin/consultations/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Remove uma consulta existente' })

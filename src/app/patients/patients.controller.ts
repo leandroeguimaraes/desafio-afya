@@ -24,11 +24,11 @@ import { Patient } from './entities/patient.entity';
 import { PatientsService } from './patients.service';
 
 @ApiTags('patients')
-@Controller('patients')
+@Controller()
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) {}
+  constructor(private readonly patientsService: PatientsService) { }
 
-  @Post()
+  @Post('patients')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Cria um novo paciente' })
@@ -43,7 +43,7 @@ export class PatientsController {
     return this.patientsService.create(createPatientDto);
   }
 
-  @Get()
+  @Get('patients')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Obter todos os pacientes' })
@@ -58,7 +58,7 @@ export class PatientsController {
     return this.patientsService.findAll();
   }
 
-  @Get(':id')
+  @Get('patients/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Obter um paciente específico' })
@@ -73,7 +73,7 @@ export class PatientsController {
     return this.patientsService.findOne(+id);
   }
 
-  @Put(':id')
+  @Put('patients/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza um paciente existente' })
@@ -91,7 +91,7 @@ export class PatientsController {
     return this.patientsService.update(+id, updatePatientDto);
   }
 
-  @Delete(':id')
+  @Delete('admin/patients/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN)
   @ApiOperation({ summary: 'Remove um paciente existente' })
@@ -104,7 +104,7 @@ export class PatientsController {
   async remove(@Param('id') id: string): Promise<void> {
     return this.patientsService.remove(+id);
   }
-  @Delete('/lgpd/:id')
+  @Delete('patients/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Remove um paciente existente respeitando o LGPD' })

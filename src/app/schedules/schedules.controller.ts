@@ -24,11 +24,11 @@ import { Schedule } from './entities/schedule.entity';
 import { SchedulesService } from './schedules.service';
 
 @ApiTags('schedules')
-@Controller('schedules')
+@Controller()
 export class SchedulesController {
-  constructor(private readonly schedulesService: SchedulesService) {}
+  constructor(private readonly schedulesService: SchedulesService) { }
 
-  @Post()
+  @Post('schedules')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Cria um novo agendamento' })
@@ -45,7 +45,7 @@ export class SchedulesController {
     return this.schedulesService.create(createScheduleDto);
   }
 
-  @Get()
+  @Get('schedules')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Obter todos os agendamentos' })
@@ -60,7 +60,7 @@ export class SchedulesController {
     return this.schedulesService.findAll();
   }
 
-  @Get(':id')
+  @Get('schedules/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Obter um agendamento específico' })
@@ -78,7 +78,7 @@ export class SchedulesController {
     return this.schedulesService.findOne(+id);
   }
 
-  @Put(':id')
+  @Put('schedules/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Atualiza um agendamento existente' })
@@ -99,7 +99,7 @@ export class SchedulesController {
     return this.schedulesService.update(+id, updateScheduleDto);
   }
 
-  @Delete(':id')
+  @Delete('schedules/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
   @ApiOperation({ summary: 'Remove um agendamento existente' })
