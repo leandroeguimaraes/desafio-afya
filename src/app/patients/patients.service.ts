@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets, Equal, IsNull, Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { Patient } from './entities/patient.entity';
@@ -15,7 +15,7 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient)
     private patientsRepository: Repository<Patient>,
-  ) { }
+  ) {}
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     const { email } = createPatientDto;
@@ -70,9 +70,9 @@ export class PatientsService {
     const patient = await this.findOne(id);
 
     patient.deletedAt = new Date();
-    patient.name = "User Deleted";
-    patient.email = Date.now() + "userdeleted@gmail.com";
-    patient.phone = "11999999999";
+    patient.name = 'User Deleted';
+    patient.email = Date.now() + 'userdeleted@gmail.com';
+    patient.phone = '11999999999';
     patient.birthDate = new Date();
     patient.gender = EnumGender.MASCULINO;
     patient.height = 0.01;

@@ -317,8 +317,7 @@ describe('PatientsService', () => {
       expect(patientsRepository.save).toHaveBeenCalledWith({
         ...patient,
         deletedAt: expect.any(Date),
-        name: "User Deleted",
-
+        name: 'User Deleted',
       });
     });
   });

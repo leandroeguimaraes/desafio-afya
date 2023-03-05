@@ -6,7 +6,6 @@ import {
   Body,
   Param,
   UseGuards,
-  Query,
   Put,
 } from '@nestjs/common';
 import {
@@ -27,7 +26,7 @@ import { PatientsService } from './patients.service';
 @ApiTags('patients')
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) { }
+  constructor(private readonly patientsService: PatientsService) {}
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
