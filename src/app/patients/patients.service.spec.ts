@@ -90,75 +90,33 @@ describe('PatientsService', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of patients including deleted ones when activeOnly is false', async () => {
-      const patient1 = new Patient();
-      patient1.id = 1;
-      patient1.email = 'test1@test.com';
+    it('should return an array of users', async () => {
+      const user1 = new Patient();
+      user1.id = 1;
+      user1.email = 'test1@test.com';
 
-      const patient2 = new Patient();
-      patient2.id = 2;
-      patient2.email = 'test2@test.com';
-      patient2.deletedAt = new Date();
+      const user2 = new Patient();
+      user2.id = 2;
+      user2.email = 'test2@test.com';
 
-      const patients = [patient1, patient2];
+      const users = [user1, user2];
 
       const queryBuilder: SelectQueryBuilder<Patient> = {
         leftJoinAndSelect: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        orWhere: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(patients),
+        getMany: jest.fn().mockResolvedValue(users),
       } as any;
 
       jest
         .spyOn(patientsRepository, 'createQueryBuilder')
         .mockReturnValue(queryBuilder);
 
-      const allPatients = await patientsService.findAll(false);
+      const allUsers = await patientsService.findAll();
 
-      expect(allPatients).toEqual(patients);
-      expect(patientsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(allUsers).toEqual(users);
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
         'patient.user',
         'user',
       );
-      expect(queryBuilder.getMany).toHaveBeenCalledTimes(1);
-      expect(queryBuilder.andWhere).not.toHaveBeenCalled();
-      expect(queryBuilder.orWhere).not.toHaveBeenCalled();
-    });
-
-    it('should return an array of patients without deleted ones when activeOnly is true', async () => {
-      const patient1 = new Patient();
-      patient1.id = 1;
-      patient1.email = 'test1@test.com';
-
-      const patient2 = new Patient();
-      patient2.id = 2;
-      patient2.email = 'test2@test.com';
-      patient2.deletedAt = new Date();
-
-      const patients = [patient1];
-
-      const queryBuilder: SelectQueryBuilder<Patient> = {
-        leftJoinAndSelect: jest.fn().mockReturnThis(),
-        andWhere: jest.fn().mockReturnThis(),
-        orWhere: jest.fn().mockReturnThis(),
-        getMany: jest.fn().mockResolvedValue(patients),
-      } as any;
-
-      jest
-        .spyOn(patientsRepository, 'createQueryBuilder')
-        .mockReturnValue(queryBuilder);
-
-      const allPatients = await patientsService.findAll(true);
-
-      expect(allPatients).toEqual(patients);
-      expect(patientsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
-      expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
-        'patient.user',
-        'user',
-      );
-      expect(queryBuilder.getMany).toHaveBeenCalledTimes(1);
-      expect(queryBuilder.andWhere).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -359,13 +317,8 @@ describe('PatientsService', () => {
       expect(patientsRepository.save).toHaveBeenCalledWith({
         ...patient,
         deletedAt: expect.any(Date),
-        name: null,
-        email: null,
-        phone: null,
-        birthDate: null,
-        gender: null,
-        height: null,
-        weight: null,
+        name: "User Deleted",
+
       });
     });
   });

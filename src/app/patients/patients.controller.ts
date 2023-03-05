@@ -27,7 +27,7 @@ import { PatientsService } from './patients.service';
 @ApiTags('patients')
 @Controller('patients')
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) {}
+  constructor(private readonly patientsService: PatientsService) { }
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -55,8 +55,8 @@ export class PatientsController {
     isArray: true,
   })
   @ApiBearerAuth()
-  async findAll(@Query('activeOnly') activeOnly: boolean): Promise<Patient[]> {
-    return this.patientsService.findAll(activeOnly);
+  async findAll(): Promise<Patient[]> {
+    return this.patientsService.findAll();
   }
 
   @Get(':id')
@@ -116,6 +116,6 @@ export class PatientsController {
   @ApiResponse({ status: 404, description: 'O paciente não foi encontrado.' })
   @ApiBearerAuth()
   async removeLGPD(@Param('id') id: string): Promise<void> {
-    return this.patientsService.remove(+id);
+    return this.patientsService.removeLGPD(+id);
   }
 }

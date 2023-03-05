@@ -108,7 +108,7 @@ describe('PatientsController', () => {
   });
 
   describe('findAll', () => {
-    it('should return an array of all patients when activeOnly is false', async () => {
+    it('should return an array of all patients ', async () => {
       const patients: Patient[] = [
         {
           id: 1,
@@ -148,56 +148,10 @@ describe('PatientsController', () => {
 
       jest.spyOn(patientsService, 'findAll').mockResolvedValue(patients);
 
-      const result = await patientsController.findAll(false);
+      const result = await patientsController.findAll();
 
       expect(result).toEqual(patients);
-      expect(patientsService.findAll).toHaveBeenCalledWith(false);
-    });
-
-    it('should return an array of active patients when activeOnly is true', async () => {
-      const activePatients: Patient[] = [
-        {
-          id: 1,
-          userId: 1,
-          name: 'John Doe',
-          email: 'johndoe@test.com',
-          phone: '123456789',
-          birthDate: new Date('1990-01-01'),
-          gender: 'male',
-          height: 180,
-          weight: 80,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: null,
-          user: null,
-          schedules: [],
-          consultations: [],
-        },
-        {
-          id: 3,
-          userId: 2,
-          name: 'Mike Smith',
-          email: 'mikesmith@test.com',
-          phone: '55555555',
-          birthDate: new Date('1985-01-01'),
-          gender: 'male',
-          height: 175,
-          weight: 70,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          deletedAt: new Date('2022-03-10T12:30:00Z'),
-          user: null,
-          schedules: [],
-          consultations: [],
-        },
-      ];
-
-      jest.spyOn(patientsService, 'findAll').mockResolvedValue(activePatients);
-
-      const result = await patientsController.findAll(true);
-
-      expect(result).toEqual(activePatients);
-      expect(patientsService.findAll).toHaveBeenCalledWith(true);
+      expect(patientsService.findAll).toHaveBeenCalledWith();
     });
   });
 
