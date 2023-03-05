@@ -168,7 +168,6 @@ describe('PatientsService', () => {
       patient1.id = 1;
       patient1.email = 'test1@test.com';
 
-
       const queryBuilder: SelectQueryBuilder<Patient> = {
         leftJoinAndSelect: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
@@ -196,7 +195,6 @@ describe('PatientsService', () => {
       patient1.id = 1;
       patient1.email = 'test1@test.com';
 
-
       const queryBuilder: SelectQueryBuilder<Patient> = {
         leftJoinAndSelect: jest.fn().mockReturnThis(),
         where: jest.fn().mockReturnThis(),
@@ -206,7 +204,6 @@ describe('PatientsService', () => {
       jest
         .spyOn(patientsRepository, 'createQueryBuilder')
         .mockReturnValue(queryBuilder);
-
 
       await expect(patientsService.findOne(patient1.id)).rejects.toThrow(
         NotFoundException,
@@ -239,9 +236,7 @@ describe('PatientsService', () => {
         name: 'Patient Patient',
       };
 
-      jest
-        .spyOn(patientsService, 'findOne')
-        .mockResolvedValueOnce(patient);
+      jest.spyOn(patientsService, 'findOne').mockResolvedValueOnce(patient);
 
       jest.spyOn(patientsRepository, 'merge').mockReturnValueOnce(patient);
       const saveSpy = jest
@@ -309,11 +304,9 @@ describe('PatientsService', () => {
     });
 
     it('should throw a NotFoundException if the patient does not exist', async () => {
-      jest
-        .spyOn(patientsService, 'findOne')
-        .mockImplementation(() => {
-          throw new NotFoundException(`Paciente não foi encontrado`);
-        });
+      jest.spyOn(patientsService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Paciente não foi encontrado`);
+      });
 
       await expect(patientsService.remove(1)).rejects.toThrow(
         NotFoundException,

@@ -62,7 +62,6 @@ describe('ConsultationsService', () => {
       expect(createdConsultation).toEqual(expectedConsultation);
       expect(consultationsRepository.findOne).toHaveBeenCalledWith({
         where: {
-          patientId: createConsultationDto.patientId,
           scheduleId: createConsultationDto.scheduleId,
         },
       });
@@ -90,7 +89,6 @@ describe('ConsultationsService', () => {
       ).rejects.toThrow(ConflictException);
       expect(consultationsRepository.findOne).toHaveBeenCalledWith({
         where: {
-          patientId: createConsultationDto.patientId,
           scheduleId: createConsultationDto.scheduleId,
         },
       });
@@ -166,7 +164,9 @@ describe('ConsultationsService', () => {
       const consultation = await consultationsService.findOne(consultation1.id);
 
       expect(consultation).toEqual(consultation);
-      expect(consultationsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(consultationsRepository.createQueryBuilder).toHaveBeenCalledTimes(
+        1,
+      );
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
         'consultation.patient',
         'patient',
@@ -181,7 +181,6 @@ describe('ConsultationsService', () => {
       );
       expect(queryBuilder.where).toHaveBeenCalledTimes(1);
       expect(queryBuilder.getOne).toHaveBeenCalledTimes(1);
-
     });
 
     it('should throw a NotFoundException if consultation does not exist', async () => {
@@ -202,11 +201,13 @@ describe('ConsultationsService', () => {
         .spyOn(consultationsRepository, 'createQueryBuilder')
         .mockReturnValue(queryBuilder);
 
-      await expect(consultationsService.findOne(consultation1.id)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        consultationsService.findOne(consultation1.id),
+      ).rejects.toThrow(NotFoundException);
 
-      expect(consultationsRepository.createQueryBuilder).toHaveBeenCalledTimes(1);
+      expect(consultationsRepository.createQueryBuilder).toHaveBeenCalledTimes(
+        1,
+      );
       expect(queryBuilder.leftJoinAndSelect).toHaveBeenCalledWith(
         'consultation.patient',
         'patient',
@@ -264,11 +265,9 @@ describe('ConsultationsService', () => {
     });
 
     it('should throw a NotFoundException if consultation with given id is not found', async () => {
-      jest
-        .spyOn(consultationsService, 'findOne')
-        .mockImplementation(() => {
-          throw new NotFoundException(`Consulta não foi encontrado`);
-        });
+      jest.spyOn(consultationsService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Consulta não foi encontrado`);
+      });
 
       await expect(
         consultationsService.update(1, updateConsultationDto),
@@ -300,11 +299,9 @@ describe('ConsultationsService', () => {
     });
 
     it('should throw a NotFoundException if the consultation does not exist', async () => {
-      jest
-        .spyOn(consultationsService, 'findOne')
-        .mockImplementation(() => {
-          throw new NotFoundException(`Consulta não foi encontrado`);
-        });
+      jest.spyOn(consultationsService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Consulta não foi encontrado`);
+      });
 
       await expect(consultationsService.remove(1)).rejects.toThrow(
         NotFoundException,

@@ -33,7 +33,8 @@ export class CreatePatientDto {
   })
   @IsString({ message: 'phone - deve ser uma string' })
   @MinLength(10, {
-    message: 'phone - o número de telefone não pode ter menos do que 10 dígitos',
+    message:
+      'phone - o número de telefone não pode ter menos do que 10 dígitos',
   })
   @MaxLength(11, {
     message: 'phone - o número de telefone não pode ter mais do que 11 dígitos',
@@ -55,7 +56,9 @@ export class CreatePatientDto {
     example: '2000-01-01  - padrão ISO 8601',
     description: 'Data de nascimento do paciente',
   })
-  @IsDate({ message: 'birthDate -Data inválida, deve seguir o padrão ISO 8601' })
+  @IsDate({
+    message: 'birthDate -Data inválida, deve seguir o padrão ISO 8601',
+  })
   @Type(() => Date)
   @IsNotEmpty({ message: 'birthDate - deve ser preenchido' })
   birthDate: Date;

@@ -14,14 +14,14 @@ export class ConsultationsService {
   constructor(
     @InjectRepository(Consultation)
     private consultationsRepository: Repository<Consultation>,
-  ) { }
+  ) {}
 
   async create(
     createConsultationDto: CreateConsultationDto,
   ): Promise<Consultation> {
-    const { patientId, scheduleId } = createConsultationDto;
+    const { scheduleId } = createConsultationDto;
     const existingConsultation = await this.consultationsRepository.findOne({
-      where: { patientId, scheduleId },
+      where: { scheduleId },
     });
 
     if (existingConsultation) {

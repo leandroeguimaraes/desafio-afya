@@ -1,9 +1,14 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import {
+  DATE_SERVICE,
+  IDateService,
+} from 'src/infra/date/interface/date.interface';
 import { Repository } from 'typeorm';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -14,19 +19,48 @@ export class SchedulesService {
   constructor(
     @InjectRepository(Schedule)
     private schedulesRepository: Repository<Schedule>,
-  ) { }
+    @Inject(DATE_SERVICE) private dateService: IDateService,
+  ) {}
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
-    const { userId, date } = createScheduleDto;
-    const existingSchedule = await this.schedulesRepository.findOne({
-      where: { date, userId },
-    });
+    const { userId, patientId, date } = createScheduleDto;
 
-    if (existingSchedule) {
-      throw new ConflictException(`Agendamento já existe`);
+    const currentDate = this.dateService.currentUTCDate();
+    const dateUTC = this.dateService.getUTCDate(date);
+
+    if (this.dateService.isBeforeDay(dateUTC, currentDate)) {
+      throw new ConflictException('Não é possível agendar uma data passada');
     }
-    const schedule = this.schedulesRepository.create(createScheduleDto);
-    return await this.schedulesRepository.save(schedule);
+
+    const existingSchedulePatient = await this.schedulesRepository.findOne({
+      where: { patientId, date },
+    });
+    if (existingSchedulePatient) {
+      throw new ConflictException(
+        'Já existe um agendamento para este paciente nesta data e hora.',
+      );
+    }
+
+    const existingUserSchedule = await this.schedulesRepository.findOne({
+      where: { userId, date },
+    });
+    if (existingUserSchedule) {
+      throw new ConflictException(
+        'Já existe um agendamento para este usuário nesta data e hora.',
+      );
+    }
+
+    const existingUserPatientSchedule = await this.schedulesRepository.findOne({
+      where: { userId, patientId, date },
+    });
+    if (existingUserPatientSchedule) {
+      throw new ConflictException(
+        'Já existe um agendamento para este usuário e paciente nesta data e hora.',
+      );
+    }
+
+    const newSchedule = this.schedulesRepository.create(createScheduleDto);
+    return await this.schedulesRepository.save(newSchedule);
   }
 
   async findAll(): Promise<Schedule[]> {
@@ -45,7 +79,9 @@ export class SchedulesService {
       .getOne();
 
     if (!schedule) {
-      throw new NotFoundException(`Agendamento com id ${id} não foi encontrado`);
+      throw new NotFoundException(
+        `Agendamento com id ${id} não foi encontrado`,
+      );
     }
 
     return schedule;
