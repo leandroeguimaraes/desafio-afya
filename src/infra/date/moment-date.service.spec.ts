@@ -28,21 +28,21 @@ describe('MomentDateService', () => {
     it('should return true if first date is after second date', () => {
       const date1 = new Date('2022-01-01');
       const date2 = new Date('2021-01-01');
-      const result = service.isAfterDay(date1, date2);
+      const result = service.isAfter(date1, date2);
       expect(result).toBe(true);
     });
 
     it('should return false if first date is before second date', () => {
       const date1 = new Date('2021-01-01');
       const date2 = new Date('2022-01-01');
-      const result = service.isAfterDay(date1, date2);
+      const result = service.isAfter(date1, date2);
       expect(result).toBe(false);
     });
 
     it('should return false if dates are equal', () => {
       const date1 = new Date('2022-01-01');
       const date2 = new Date('2022-01-01');
-      const result = service.isAfterDay(date1, date2);
+      const result = service.isAfter(date1, date2);
       expect(result).toBe(false);
     });
   });
@@ -51,21 +51,21 @@ describe('MomentDateService', () => {
     it('should return true if first date is before second date', () => {
       const date1 = new Date('2021-01-01');
       const date2 = new Date('2022-01-01');
-      const result = service.isBeforeDay(date1, date2);
+      const result = service.isBefore(date1, date2);
       expect(result).toBe(true);
     });
 
     it('should return false if first date is after second date', () => {
       const date1 = new Date('2022-01-01');
       const date2 = new Date('2021-01-01');
-      const result = service.isBeforeDay(date1, date2);
+      const result = service.isBefore(date1, date2);
       expect(result).toBe(false);
     });
 
     it('should return false if dates are equal', () => {
       const date1 = new Date('2022-01-01');
       const date2 = new Date('2022-01-01');
-      const result = service.isBeforeDay(date1, date2);
+      const result = service.isBefore(date1, date2);
       expect(result).toBe(false);
     });
   });
