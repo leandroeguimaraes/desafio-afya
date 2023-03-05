@@ -26,7 +26,7 @@ import { Consultation } from './entities/consultation.entity';
 @ApiTags('consultations')
 @Controller()
 export class ConsultationsController {
-  constructor(private readonly consultationsService: ConsultationsService) { }
+  constructor(private readonly consultationsService: ConsultationsService) {}
 
   @Post('admin/consultations')
   @UseGuards(JwtAuthGuard, RolesGuard)

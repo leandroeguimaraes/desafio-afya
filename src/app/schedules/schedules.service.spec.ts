@@ -371,7 +371,9 @@ describe('SchedulesService', () => {
       jest.spyOn(consultationsRepository, 'find').mockResolvedValueOnce([]);
       jest.spyOn(consultationsRepository, 'count').mockResolvedValueOnce(0);
       jest.spyOn(schedulesService, 'findOne').mockResolvedValueOnce(schedule);
-      const deleteSpy = jest.spyOn(schedulesRepository, 'delete').mockResolvedValueOnce(undefined);
+      const deleteSpy = jest
+        .spyOn(schedulesRepository, 'delete')
+        .mockResolvedValueOnce(undefined);
 
       await schedulesService.remove(1);
 
@@ -385,7 +387,9 @@ describe('SchedulesService', () => {
         throw new NotFoundException(`Agendamento não foi encontrado`);
       });
 
-      await expect(schedulesService.remove(1)).rejects.toThrow(NotFoundException);
+      await expect(schedulesService.remove(1)).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('should throw a ConflictException if the schedule has consultations', async () => {
@@ -402,8 +406,34 @@ describe('SchedulesService', () => {
       consultation.scheduleId = 1;
       consultation.notes = 'Notes';
 
-      jest.spyOn(consultationsRepository, 'find').mockResolvedValueOnce([consultation]);
-      await expect(schedulesService.remove(1)).rejects.toThrow(ConflictException);
+      jest
+        .spyOn(consultationsRepository, 'find')
+        .mockResolvedValueOnce([consultation]);
+      await expect(schedulesService.remove(1)).rejects.toThrow(
+        ConflictException,
+      );
+    });
+  });
+  describe('removeAdmin', () => {
+    it('should remove schedule by id', async () => {
+      const schedule = new Schedule();
+      schedule.id = 1;
+      jest.spyOn(schedulesService, 'findOne').mockResolvedValueOnce(schedule);
+
+      const deleteSpy = jest
+        .spyOn(schedulesRepository, 'delete')
+        .mockResolvedValueOnce(undefined);
+      await schedulesService.removeAdmin(schedule.id);
+      expect(deleteSpy).toHaveBeenCalledWith(schedule.id);
+    });
+
+    it('should throw NotFoundException when schedule is not found', async () => {
+      jest.spyOn(schedulesService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Agendamento não foi encontrado`);
+      });
+      await expect(schedulesService.removeAdmin(1)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });

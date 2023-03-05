@@ -26,7 +26,7 @@ import { SchedulesService } from './schedules.service';
 @ApiTags('schedules')
 @Controller()
 export class SchedulesController {
-  constructor(private readonly schedulesService: SchedulesService) { }
+  constructor(private readonly schedulesService: SchedulesService) {}
 
   @Post('schedules')
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -102,7 +102,10 @@ export class SchedulesController {
   @Delete('schedules/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
-  @ApiOperation({ summary: 'Remove um agendamento existente' })
+  @ApiOperation({
+    summary:
+      'Remove um agendamento existente se não estiver associado a consulta',
+  })
   @ApiResponse({
     status: 200,
     description: 'O agendamento foi removido com sucesso.',
@@ -114,5 +117,22 @@ export class SchedulesController {
   @ApiBearerAuth()
   async remove(@Param('id') id: string): Promise<void> {
     return this.schedulesService.remove(+id);
+  }
+
+  @Delete('admin/schedules/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(EnumRole.ADMIN, EnumRole.DOCTOR)
+  @ApiOperation({ summary: 'Remove um agendamento existente' })
+  @ApiResponse({
+    status: 200,
+    description: 'O agendamento foi removido com sucesso.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'O agendamento não foi encontrado.',
+  })
+  @ApiBearerAuth()
+  async removeAdmin(@Param('id') id: string): Promise<void> {
+    return this.schedulesService.removeAdmin(+id);
   }
 }

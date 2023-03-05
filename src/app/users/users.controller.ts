@@ -27,7 +27,7 @@ import {
 @ApiExtraModels(CreateUserDto, UpdateUserDto)
 @Controller()
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('admin/users')
   @UseGuards(JwtAuthGuard)

@@ -192,4 +192,27 @@ describe('SchedulesController', () => {
       );
     });
   });
+  describe('removeAdmin', () => {
+    it('should remove a schedule', async () => {
+      const id = '1';
+      jest.spyOn(schedulesService, 'removeAdmin').mockResolvedValueOnce();
+
+      await schedulesController.remove(id);
+
+      expect(schedulesService.remove).toHaveBeenCalledWith(Number(id));
+    });
+
+    it('should throw a NotFoundException if schedule does not exist', async () => {
+      const id = '1';
+      jest.spyOn(schedulesService, 'removeAdmin').mockRejectedValueOnce(() => {
+        throw new NotFoundException(
+          `Agendamento com id ${id} não foi encontrado`,
+        );
+      });
+
+      await expect(schedulesController.remove(id)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+  });
 });

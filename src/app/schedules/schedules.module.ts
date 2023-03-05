@@ -12,8 +12,9 @@ import { Consultation } from '../consultations/entities/consultation.entity';
     TypeOrmModule.forFeature([Schedule]),
     TypeOrmModule.forFeature([Consultation]),
     JwtTokenModule,
-    DateModule],
+    DateModule,
+  ],
   controllers: [SchedulesController],
   providers: [SchedulesService],
 })
-export class SchedulesModule { }
+export class SchedulesModule {}

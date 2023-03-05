@@ -26,7 +26,7 @@ import { PatientsService } from './patients.service';
 @ApiTags('patients')
 @Controller()
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) { }
+  constructor(private readonly patientsService: PatientsService) {}
 
   @Post('patients')
   @UseGuards(JwtAuthGuard, RolesGuard)
