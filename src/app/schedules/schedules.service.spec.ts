@@ -5,10 +5,17 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { SchedulesService } from './schedules.service';
 import { Schedule } from './entities/schedule.entity';
+import * as moment from 'moment-timezone';
+import {
+  DATE_SERVICE,
+  IDateService,
+} from 'src/infra/date/interface/date.interface';
+import { MomentDateService } from 'src/infra/date/moment-date.service';
 
 describe('SchedulesService', () => {
   let schedulesService: SchedulesService;
   let schedulesRepository: Repository<Schedule>;
+  let dateService: IDateService;
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -18,6 +25,10 @@ describe('SchedulesService', () => {
           provide: getRepositoryToken(Schedule),
           useClass: Repository,
         },
+        {
+          provide: DATE_SERVICE,
+          useClass: MomentDateService,
+        },
       ],
     }).compile();
 
@@ -25,67 +36,164 @@ describe('SchedulesService', () => {
     schedulesRepository = moduleRef.get<Repository<Schedule>>(
       getRepositoryToken(Schedule),
     );
+    dateService = moduleRef.get<IDateService>(DATE_SERVICE);
   });
 
   describe('create', () => {
-    it('should create and return a schedule', async () => {
+    it('should create a new schedule', async () => {
       const createScheduleDto: CreateScheduleDto = {
-        patientId: 1,
-        date: new Date(),
         userId: 1,
+        patientId: 2,
+        date: new Date('2023-03-17'),
       };
-      const existingSchedule = undefined;
 
-      const expectedSchedule = new Schedule();
-      expectedSchedule.id = 1;
-      expectedSchedule.date = createScheduleDto.date;
-      expectedSchedule.userId = createScheduleDto.userId;
+      const currentDate = moment.utc('2023-03-05T18:00:00.000Z').toDate();
+      const dateUTC = moment.utc('2023-03-07T18:00:00.000Z').toDate();
+
+      jest.spyOn(dateService, 'currentUTCDate').mockReturnValue(currentDate);
+      jest.spyOn(dateService, 'getUTCDate').mockReturnValue(dateUTC);
+
+      const existingSchedulePatient = null;
+      const existingUserSchedule = null;
+      const existingUserPatientSchedule = null;
 
       jest
         .spyOn(schedulesRepository, 'findOne')
-        .mockResolvedValue(existingSchedule);
+        .mockImplementationOnce(() => Promise.resolve(existingSchedulePatient))
+        .mockImplementationOnce(() => Promise.resolve(existingUserSchedule))
+        .mockImplementationOnce(() =>
+          Promise.resolve(existingUserPatientSchedule),
+        );
 
-      jest
-        .spyOn(schedulesRepository, 'create')
-        .mockReturnValue(expectedSchedule);
-      jest
-        .spyOn(schedulesRepository, 'save')
-        .mockResolvedValue(expectedSchedule);
+      const newSchedule = new Schedule();
+      newSchedule.id = 1;
+      newSchedule.userId = 1;
+      newSchedule.patientId = 2;
+      newSchedule.date = new Date('2023-03-15T14:00:00.000Z');
+      newSchedule.createdAt = new Date();
+      newSchedule.updatedAt = new Date();
+      newSchedule.deletedAt = new Date();
+      newSchedule.user = null;
+      newSchedule.patient = null;
+      newSchedule.consultations = [];
 
-      const createdSchedule = await schedulesService.create(createScheduleDto);
+      jest.spyOn(schedulesRepository, 'create').mockReturnValue(newSchedule);
+      jest.spyOn(schedulesRepository, 'save').mockResolvedValue(newSchedule);
 
-      expect(createdSchedule).toEqual(expectedSchedule);
-      expect(schedulesRepository.findOne).toHaveBeenCalledWith({
-        where: {
-          date: createScheduleDto.date,
-          userId: createScheduleDto.userId,
-        },
-      });
-      expect(schedulesRepository.save).toHaveBeenCalledWith(expectedSchedule);
+      const result = await schedulesService.create(createScheduleDto);
+
+      expect(result).toEqual(newSchedule);
+      expect(schedulesRepository.findOne).toHaveBeenCalledTimes(3);
+      expect(schedulesRepository.create).toHaveBeenCalledWith(
+        createScheduleDto,
+      );
+      expect(schedulesRepository.save).toHaveBeenCalledWith(newSchedule);
     });
-
-    it('should throw a ConflictException when schedule already exists', async () => {
-      const createScheduleDto: CreateScheduleDto = {
-        patientId: 1,
+    it('should throw a ConflictException when the schedule date is in the past', async () => {
+      const createScheduleDto = {
         userId: 1,
-        date: new Date(),
+        patientId: 1,
+        date: new Date('2023-01-01'),
       };
 
-      const existingSchedule = new Schedule();
+      const currentDate = moment.utc('2023-03-01T12:00:00Z').toDate();
+      const dateUTC = moment.utc('2023-01-01T00:00:00Z').toDate();
+
+      jest.spyOn(dateService, 'currentUTCDate').mockReturnValue(currentDate);
+      jest.spyOn(dateService, 'getUTCDate').mockReturnValue(dateUTC);
+
+      await expect(
+        schedulesService.create(createScheduleDto),
+      ).rejects.toThrowError(ConflictException);
+    });
+    it('should throw a ConflictException if there is already a schedule for the patient at that date', async () => {
+      const createScheduleDto = {
+        userId: 1,
+        patientId: 1,
+        date: new Date('2023-06-01'),
+      };
+
+      const currentDate = moment.utc('2023-03-05T18:00:00.000Z').toDate();
+      const dateUTC = moment.utc('2023-03-07T18:00:00.000Z').toDate();
+
+      jest.spyOn(dateService, 'currentUTCDate').mockReturnValue(currentDate);
+      jest.spyOn(dateService, 'getUTCDate').mockReturnValue(dateUTC);
+
+      const existingSchedulePatient = new Schedule();
+      const existingUserSchedule = null;
+      const existingUserPatientSchedule = null;
 
       jest
         .spyOn(schedulesRepository, 'findOne')
-        .mockResolvedValue(existingSchedule);
+        .mockImplementationOnce(() => Promise.resolve(existingSchedulePatient))
+        .mockImplementationOnce(() => Promise.resolve(existingUserSchedule))
+        .mockImplementationOnce(() =>
+          Promise.resolve(existingUserPatientSchedule),
+        );
 
       await expect(schedulesService.create(createScheduleDto)).rejects.toThrow(
         ConflictException,
       );
-      expect(schedulesRepository.findOne).toHaveBeenCalledWith({
-        where: {
-          date: createScheduleDto.date,
-          userId: createScheduleDto.userId,
-        },
-      });
+    });
+
+    it('should throw a ConflictException if there is already a schedule for the user at that date', async () => {
+      const createScheduleDto = {
+        userId: 1,
+        patientId: 1,
+        date: new Date('2023-06-01'),
+      };
+
+      const currentDate = moment.utc('2023-03-05T18:00:00.000Z').toDate();
+      const dateUTC = moment.utc('2023-03-07T18:00:00.000Z').toDate();
+
+      jest.spyOn(dateService, 'currentUTCDate').mockReturnValue(currentDate);
+      jest.spyOn(dateService, 'getUTCDate').mockReturnValue(dateUTC);
+
+      const existingSchedulePatient = null;
+      const existingUserSchedule = new Schedule();
+      const existingUserPatientSchedule = null;
+
+      jest
+        .spyOn(schedulesRepository, 'findOne')
+        .mockImplementationOnce(() => Promise.resolve(existingSchedulePatient))
+        .mockImplementationOnce(() => Promise.resolve(existingUserSchedule))
+        .mockImplementationOnce(() =>
+          Promise.resolve(existingUserPatientSchedule),
+        );
+
+      await expect(schedulesService.create(createScheduleDto)).rejects.toThrow(
+        ConflictException,
+      );
+    });
+
+    it('should throw a ConflictException if there is already a schedule for the user and patient at that date', async () => {
+      const createScheduleDto = {
+        userId: 1,
+        patientId: 1,
+        date: new Date('2023-06-01'),
+      };
+
+      const currentDate = moment.utc('2023-03-05T18:00:00.000Z').toDate();
+      const dateUTC = moment.utc('2023-03-07T18:00:00.000Z').toDate();
+
+      jest.spyOn(dateService, 'currentUTCDate').mockReturnValue(currentDate);
+      jest.spyOn(dateService, 'getUTCDate').mockReturnValue(dateUTC);
+
+      const existingSchedulePatient = null;
+      const existingUserSchedule = null;
+      const existingUserPatientSchedule = new Schedule();
+
+      jest
+        .spyOn(schedulesRepository, 'findOne')
+        .mockImplementationOnce(() => Promise.resolve(existingSchedulePatient))
+        .mockImplementationOnce(() => Promise.resolve(existingUserSchedule))
+        .mockImplementationOnce(() =>
+          Promise.resolve(existingUserPatientSchedule),
+        );
+
+      await expect(schedulesService.create(createScheduleDto)).rejects.toThrow(
+        ConflictException,
+      );
     });
   });
 
@@ -135,7 +243,6 @@ describe('SchedulesService', () => {
       schedule1.userId = 1;
       schedule1.patientId = 1;
       schedule1.date = new Date();
-
 
       const queryBuilder: SelectQueryBuilder<Schedule> = {
         leftJoinAndSelect: jest.fn().mockReturnThis(),
@@ -210,9 +317,7 @@ describe('SchedulesService', () => {
         date: new Date('2021-01-01'),
       };
 
-      jest
-        .spyOn(schedulesService, 'findOne')
-        .mockResolvedValueOnce(schedule);
+      jest.spyOn(schedulesService, 'findOne').mockResolvedValueOnce(schedule);
 
       jest.spyOn(schedulesRepository, 'merge').mockReturnValueOnce(schedule);
       const saveSpy = jest
@@ -269,11 +374,9 @@ describe('SchedulesService', () => {
     });
 
     it('should throw a NotFoundException if the schedule does not exist', async () => {
-      jest
-        .spyOn(schedulesService, 'findOne')
-        .mockImplementation(() => {
-          throw new NotFoundException(`Agendamento não foi encontrado`);
-        });
+      jest.spyOn(schedulesService, 'findOne').mockImplementation(() => {
+        throw new NotFoundException(`Agendamento não foi encontrado`);
+      });
 
       await expect(schedulesService.remove(1)).rejects.toThrow(
         NotFoundException,

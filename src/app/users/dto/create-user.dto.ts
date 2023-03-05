@@ -39,7 +39,9 @@ export class CreateUserDto {
     example: '!SenhaSegura123',
   })
   @IsNotEmpty({ message: 'password - senha deve ser preenchido' })
-  @MaxLength(50, { message: 'password - O nome deve ter menos de 50 caracteres' })
+  @MaxLength(50, {
+    message: 'password - O nome deve ter menos de 50 caracteres',
+  })
   @IsStrongPassword(
     {
       minLength: 8,

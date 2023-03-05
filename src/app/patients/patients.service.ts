@@ -14,7 +14,7 @@ export class PatientsService {
   constructor(
     @InjectRepository(Patient)
     private patientsRepository: Repository<Patient>,
-  ) { }
+  ) {}
 
   async create(createPatientDto: CreatePatientDto): Promise<Patient> {
     const { email } = createPatientDto;
