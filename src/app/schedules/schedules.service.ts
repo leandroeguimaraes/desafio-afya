@@ -10,6 +10,7 @@ import {
   IDateService,
 } from 'src/infra/date/interface/date.interface';
 import { Repository } from 'typeorm';
+import { Consultation } from '../consultations/entities/consultation.entity';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { Schedule } from './entities/schedule.entity';
@@ -19,8 +20,10 @@ export class SchedulesService {
   constructor(
     @InjectRepository(Schedule)
     private schedulesRepository: Repository<Schedule>,
+    @InjectRepository(Consultation)
+    private consultationsRepository: Repository<Consultation>,
     @Inject(DATE_SERVICE) private dateService: IDateService,
-  ) {}
+  ) { }
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
     const { userId, patientId, date } = createScheduleDto;
@@ -97,6 +100,18 @@ export class SchedulesService {
   }
 
   async remove(id: number): Promise<void> {
+
+    const consultations = await this.consultationsRepository.find({
+      where: {
+        scheduleId: id,
+        deletedAt: null,
+      },
+    });
+
+    if (consultations.length > 0) {
+      throw new ConflictException('Não é possível remover um agendamento que possui consultas associadas');
+    }
+
     await this.findOne(id);
     await this.schedulesRepository.delete(id);
   }
