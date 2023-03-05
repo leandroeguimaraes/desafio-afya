@@ -203,6 +203,8 @@ describe('UsersController', () => {
       jest.spyOn(usersService, 'remove').mockResolvedValue(undefined);
 
       await usersController.remove('1');
+
+      expect(usersService.remove).toHaveBeenCalledWith(user.id);
     });
 
     it('should throw a NotFoundException if user does not exist', async () => {
