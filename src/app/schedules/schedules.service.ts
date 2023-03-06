@@ -23,7 +23,7 @@ export class SchedulesService {
     @InjectRepository(Consultation)
     private consultationsRepository: Repository<Consultation>,
     @Inject(DATE_SERVICE) private dateService: IDateService,
-  ) { }
+  ) {}
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
     const { userId, patientId, date } = createScheduleDto;

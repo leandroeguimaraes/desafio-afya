@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   CRYPT_SERVICE,
   ICryptService,
@@ -7,18 +8,22 @@ import {
   IJwtTokenService,
   JWTTOKEN_SERVICE,
 } from 'src/infra/jwttoken/interface/jwttoken.interface';
-import { UsersService } from '../users/users.service';
+import { Repository } from 'typeorm';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @Inject(JWTTOKEN_SERVICE) private jwtTokenService: IJwtTokenService,
     @Inject(CRYPT_SERVICE) private cryptService: ICryptService,
-    private usersService: UsersService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password'],
+    });
     if (user && this.cryptService.compare(password, user.password)) {
       const { password, ...result } = user;
       return result;

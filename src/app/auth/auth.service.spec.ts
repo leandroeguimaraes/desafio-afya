@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import {
   CRYPT_SERVICE,
@@ -16,8 +15,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let usersService: UsersService;
   let cryptService: ICryptService;
+  let usersRepository: Repository<User>;
 
   const mockJwtTokenService: IJwtTokenService = {
     sign: jest.fn(),
@@ -33,7 +32,6 @@ describe('AuthService', () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        UsersService,
         {
           provide: getRepositoryToken(User),
           useClass: Repository,
@@ -50,13 +48,13 @@ describe('AuthService', () => {
     }).compile();
 
     authService = moduleRef.get<AuthService>(AuthService);
-    usersService = moduleRef.get<UsersService>(UsersService);
     cryptService = moduleRef.get<ICryptService>(CRYPT_SERVICE);
+    usersRepository = moduleRef.get<Repository<User>>(getRepositoryToken(User));
   });
 
   describe('validateUser', () => {
     it('should return null if user not found', async () => {
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(null);
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(null);
       const result = await authService.validateUser(
         'user@gmail.com',
         'password',
@@ -71,7 +69,7 @@ describe('AuthService', () => {
       user.email = 'doctor@gmail.com';
       user.password = '!Teste123';
 
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
       jest.spyOn(cryptService, 'compare').mockReturnValue(false);
       const result = await authService.validateUser(user.email, '!Doctor1234');
       expect(result).toBeNull();
@@ -84,7 +82,7 @@ describe('AuthService', () => {
       user.email = 'doctor@gmail.com';
       user.password = '!Teste123';
 
-      jest.spyOn(usersService, 'findByEmail').mockResolvedValue(user);
+      jest.spyOn(usersRepository, 'findOne').mockResolvedValue(user);
       jest.spyOn(authService['cryptService'], 'compare').mockReturnValue(true);
       const result = await authService.validateUser(user.email, user.password);
       expect(result).toBeDefined();
