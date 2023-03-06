@@ -23,15 +23,15 @@
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 
-## Instalação
+# Instalação
 
 ```bash
 $ npm install
 ```
 
-## Configuração
+# Configuração
 
-  # Variaveis de ambiente
+  ## Variaveis de ambiente
 
 Crie um arquivo .env e development.env e siga os modelos de exemplo (.env.example e .development.env.example)
 
@@ -68,19 +68,19 @@ PGADMIN_DEFAULT_EMAIL=
 PGADMIN_DEFAULT_PASSWORD=
 ```
 
-## Rodar a aplicação
+# Rodar a aplicação
 
-  # Em modo desenvolvimento
+  ## Em modo desenvolvimento
 
 ```bash
 $ docker compose up dev
 ```
-  # Em modo produção 
+  ## Em modo produção 
 
 ```bash
 $ docker compose up prod
 ```
-  # Banco de dados
+  ## Banco de dados
 
 Configure seu o banco de dados postgres utilizando com as configurações usadas nessas variaveis:
 
@@ -91,9 +91,9 @@ POSTGRES_USER=
 POSTGRES_PASSWORD=
 POSTGRES_DB=
 ```
-## ATENÇÃO: CRIAR USUÁRIO ROLE:ADMIN e USUÁRIO ROLE:DOCTOR
+# ATENÇÃO: CRIAR USUÁRIO ROLE:ADMIN e USUÁRIO ROLE:DOCTOR
 
-Para testar o fluxo da a aplicação, é necessário criar um usuário com role admin e outro com usuário.
+Para testar o fluxo da a aplicação, é necessário criar um usuário com role admin.
 
 A forma mais fácil é desabilitando as guards da rota: {URL_API}/admin/users - method POST
 
@@ -122,20 +122,6 @@ curl --request POST \
 }'
 ```
 
-Para criar usuário com role:DOCTOR
-
-```bash
-curl --request POST \
-  --url {URL_API}/admin/users \
-  --header 'Content-Type: application/json' \
-  --data '{
-	"name":"doctor",
-	"email":"doctor@gmail.com",
-	"password":"!Teste123",
-	"role":"doctor"
-}'
-```
-
 Desfaça o comentário esses decorators no arquivo "users.controller.ts"
 
 ```bash
@@ -143,11 +129,16 @@ Desfaça o comentário esses decorators no arquivo "users.controller.ts"
   @UseGuards(RolesGuard)
   @Roles(EnumRole.ADMIN)
 ```
-E agora assim, é possível testar a aplicação ;)
 
-## Comandos
+Depois basta fazer o login para receber o token de acesso.
 
-# Teste
+Para testar um usuário com role doctor, basta criá-lo com seu token de acesso de admin na mesma rota, {URL_API}/admin/users - method POST
+
+E agora assim, é possível testar a aplicação com os dois roles ;)
+
+# Comandos
+
+## Teste
 
 ```bash
 # unit tests
@@ -155,25 +146,25 @@ $ npm run test
 
 ```
 
-# Lint
+## Lint
 
 ```bash
 # lint
 $ npm run lint
 ```
 
-# Migration
+## Migration
 
 ```bash
 # migration
 $ npm migration:run
 ```
 
-## Diagram ER
+# Diagram ER
 
 O diagrama está localizado na raiz do projeto "ER_Diagram.png"
 
-## CI Pipeline
+# CI Pipeline
 
 Foi adicionado as etapas de CI:
   - install, lint, tests, build e sonar cloud
@@ -220,7 +211,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   ```
 
-## CD Pipeline
+# CD Pipeline
 
 Foi adicionado as etapas de CD:
   - ci, lint, test, build.
@@ -244,29 +235,42 @@ artifacts:
     - '**/*'
 ```
 
-## Documentação
+# Documentação
 
   Foi utlizado Swagger:
 
     URL: {URL_API}/api
 
-## Hospedagem
+# Hospedagem
 
-  # Aplicação:
+  ## Aplicação:
 
     Aplicação hospedada na AWS BeanStalk se comunicando com o Banco de dados Postgres na AWS RDS
 
     URL: http://desafio-afya-api-prod.sa-east-1.elasticbeanstalk.com/
 
-  # Banco de dados:
+  ## Banco de dados:
     
     Banco dedados Postgres hospedado na AWS RDS:
 
     POSTGRES_HOST=db-pg-prod.cpd6bgckqpiu.sa-east-1.rds.amazonaws.com
 
-  # CI/CD
+  ## CI/CD
 
     Foi utilizado Aws Code Pipeline e Aws Code Build
+
+  ## Usuário admin 
+  
+  Usuário admin registrado no banco de produção:
+
+  ```bash
+      {
+        "name":"admin",
+        "email":"admin@gmail.com",
+        "password":"!Teste123",
+        "role":"admin"
+      }
+  ```
    
 ## License
 
