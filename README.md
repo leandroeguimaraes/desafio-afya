@@ -22,52 +22,253 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+## Instalação
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+## Configuração
+
+  # Variaveis de ambiente
+
+Crie um arquivo .env e development.env e siga os modelos de exemplo (.env.example e .development.env.example)
+
+.env
 
 ```bash
-# development
-$ npm run start
+NODE_ENV=production
+PORT=
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+JWT_SECRET=
+JWT_EXPIRES=
+REFRESH_TOKEN_EXPIRES=
+PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_PASSWORD=
+```
+.development.env
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```bash
+NODE_ENV=development
+PORT=
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+JWT_SECRET=
+JWT_EXPIRES=
+REFRESH_TOKEN_EXPIRES=
+PGADMIN_DEFAULT_EMAIL=
+PGADMIN_DEFAULT_PASSWORD=
 ```
 
-## Test
+## Rodar a aplicação
+
+  # Em modo desenvolvimento
+
+```bash
+$ docker compose up dev
+```
+  # Em modo produção 
+
+```bash
+$ docker compose up prod
+```
+  # Banco de dados
+
+Configure seu o banco de dados postgres utilizando com as configurações usadas nessas variaveis:
+
+```bash
+POSTGRES_HOST=
+POSTGRES_PORT=
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+```
+## ATENÇÃO: CRIAR USUÁRIO ROLE:ADMIN e USUÁRIO ROLE:DOCTOR
+
+Para testar o fluxo da a aplicação, é necessário criar um usuário com role admin e outro com usuário.
+
+A forma mais fácil é desabilitando as guards da rota: {URL_API}/admin/users - method POST
+
+No código:
+
+Comente esses decorators no arquivo "users.controller.ts"
+
+```bash
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(EnumRole.ADMIN)
+```
+E realize as requisições:
+
+Para criar usuário com role:ADMIN
+
+```bash
+curl --request POST \
+  --url {URL_API}/admin/users \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"name":"admin",
+	"email":"admin@gmail.com",
+	"password":"!Teste123",
+	"role":"admin"
+}'
+```
+
+Para criar usuário com role:DOCTOR
+
+```bash
+curl --request POST \
+  --url {URL_API}/admin/users \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"name":"doctor",
+	"email":"doctor@gmail.com",
+	"password":"!Teste123",
+	"role":"doctor"
+}'
+```
+
+Desfaça o comentário esses decorators no arquivo "users.controller.ts"
+
+```bash
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
+  @Roles(EnumRole.ADMIN)
+```
+E agora assim, é possível testar a aplicação ;)
+
+## Comandos
+
+# Teste
 
 ```bash
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
 
-## Support
+# Lint
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# lint
+$ npm run lint
+```
 
-## Stay in touch
+# Migration
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+# migration
+$ npm migration:run
+```
 
+## Diagram ER
+
+O diagrama está localizado na raiz do projeto "ER_Diagram.png"
+
+## CI Pipeline
+
+Foi adicionado as etapas de CI:
+  - install, lint, tests, build e sonar cloud
+
+Gatilho: develop branch
+Diretório no projeto: .github/workflows/ci.yaml
+
+```bash
+name: CI - Development
+
+on:
+  pull_request:
+    branches: 
+      - develop 
+
+jobs:
+  check-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '19.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  ```
+
+## CD Pipeline
+
+Foi adicionado as etapas de CD:
+  - ci, lint, test, build e migrations
+
+Gatilho: main branch
+Diretório no projeto: buildspec.yml
+
+```bash
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - npm ci
+      - npm run lint
+      - npm run test
+      - npm run build
+      - npm run migration:run
+
+artifacts:
+  files:
+    - '**/*'
+```
+
+## Documentação
+
+  Foi utlizado Swagger:
+
+    URL: {URL_API}/api
+
+## Hospedagem
+
+  # Aplicação:
+
+    Aplicação hospedada na AWS BeanStalk se comunicando com o Banco de dados Postgres na AWS RDS
+
+    URL: http://desafio-afya-api-prod.sa-east-1.elasticbeanstalk.com/
+
+  # Banco de dados:
+    
+    Banco dedados Postgres hospedado na AWS RDS:
+
+    POSTGRES_HOST=db-pg-prod.cpd6bgckqpiu.sa-east-1.rds.amazonaws.com
+
+  # CI/CD
+
+    Foi utilizado Aws Code Pipeline e Aws Code Build
+   
 ## License
 
 Nest is [MIT licensed](LICENSE).
