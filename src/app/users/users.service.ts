@@ -39,7 +39,9 @@ export class UsersService {
     createUserDto = { ...createUserDto, password: hashedPassword };
 
     const user = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(user);
+    const userCreated = await this.userRepository.save(user);
+    userCreated.password = undefined;
+    return userCreated;
   }
 
   async findAll(): Promise<User[]> {
