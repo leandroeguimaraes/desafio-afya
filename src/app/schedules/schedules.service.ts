@@ -23,7 +23,7 @@ export class SchedulesService {
     @InjectRepository(Consultation)
     private consultationsRepository: Repository<Consultation>,
     @Inject(DATE_SERVICE) private dateService: IDateService,
-  ) {}
+  ) { }
 
   async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
     const { userId, patientId, date } = createScheduleDto;
@@ -31,7 +31,7 @@ export class SchedulesService {
     const currentDate = this.dateService.currentUTCDate();
     const dateUTC = this.dateService.getUTCDate(date);
 
-    if (this.dateService.isBeforeDay(dateUTC, currentDate)) {
+    if (this.dateService.isBefore(dateUTC, currentDate)) {
       throw new ConflictException('Não é possível agendar uma data passada');
     }
 

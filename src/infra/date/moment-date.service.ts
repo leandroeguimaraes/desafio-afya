@@ -12,11 +12,11 @@ export class MomentDateService implements IDateService {
     return moment.utc(date).toDate();
   }
 
-  isAfterDay(date: number | Date, dateToCompare: number | Date): boolean {
-    return moment(date).isAfter(dateToCompare, 'day');
+  isAfter(date: number | Date, dateToCompare: number | Date): boolean {
+    return moment(date).isAfter(dateToCompare);
   }
 
-  isBeforeDay(date: number | Date, dateToCompare: number | Date): boolean {
-    return moment(date).isBefore(dateToCompare, 'day');
+  isBefore(date: number | Date, dateToCompare: number | Date): boolean {
+    return moment(date).isBefore(dateToCompare);
   }
 }

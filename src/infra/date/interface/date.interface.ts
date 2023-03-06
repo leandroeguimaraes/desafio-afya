@@ -3,11 +3,11 @@ export const DATE_SERVICE = 'DATE SERVICE';
 export interface IDateService {
   currentUTCDate(): Date;
   getUTCDate(date: Date): Date;
-  isAfterDay(
+  isAfter(
     date: number | Date,
     dateToCompare: number | Date,
   ): Promise<boolean> | boolean;
-  isBeforeDay(
+  isBefore(
     date: number | Date,
     dateToCompare: number | Date,
   ): Promise<boolean> | boolean;
