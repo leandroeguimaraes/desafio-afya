@@ -223,7 +223,7 @@ jobs:
 ## CD Pipeline
 
 Foi adicionado as etapas de CD:
-  - ci, lint, test, build e migrations
+  - ci, lint, test, build.
 
 Gatilho: main branch
 Diretório no projeto: buildspec.yml
@@ -238,7 +238,6 @@ phases:
       - npm run lint
       - npm run test
       - npm run build
-      - npm run migration:run
 
 artifacts:
   files:
