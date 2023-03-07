@@ -39,33 +39,33 @@ Crie um arquivo .env e development.env e siga os modelos de exemplo (.env.exampl
 
 ```bash
 NODE_ENV=production
-PORT=
-POSTGRES_HOST=
-POSTGRES_PORT=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-JWT_SECRET=
-JWT_EXPIRES=
-REFRESH_TOKEN_EXPIRES=
-PGADMIN_DEFAULT_EMAIL=
-PGADMIN_DEFAULT_PASSWORD=
+PORT=3000
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=desafio-afya
+JWT_SECRET=secret
+JWT_EXPIRES=1h 
+REFRESH_TOKEN_EXPIRES=7d
+PGADMIN_DEFAULT_EMAIL=[seu email]
+PGADMIN_DEFAULT_PASSWORD=[sua senha] 
 ```
 .development.env
 
 ```bash
 NODE_ENV=development
-PORT=
-POSTGRES_HOST=
-POSTGRES_PORT=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-JWT_SECRET=
-JWT_EXPIRES=
-REFRESH_TOKEN_EXPIRES=
-PGADMIN_DEFAULT_EMAIL=
-PGADMIN_DEFAULT_PASSWORD=
+PORT=3000
+POSTGRES_HOST=db_dev
+POSTGRES_PORT=5432
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=desafio-afya
+JWT_SECRET=secret
+JWT_EXPIRES=7d 
+REFRESH_TOKEN_EXPIRES=7d
+PGADMIN_DEFAULT_EMAIL=[seu email]
+PGADMIN_DEFAULT_PASSWORD=[sua senha] 
 ```
 
 # Rodar a aplicação
@@ -80,16 +80,56 @@ $ docker compose up dev
 ```bash
 $ docker compose up prod
 ```
+  ## Para alguns casos de erros ao rodar docker compose:
+  
+  Erro 1:
+
+  sh: nest: not found
+
+  Solução:
+
+  ```bash
+  npm install -g @nestjs/cli
+  ```
+
+  Erro 2:
+
+  ```bash
+  npm ERR! path /app
+  desafio-afya-dev-1  | npm ERR! command failed
+  desafio-afya-dev-1  | npm ERR! signal SIGTERM
+  desafio-afya-dev-1  | npm ERR! command sh -c NODE_ENV=development nest start --watch
+  ```
+  Solução:
+
+  Rode os comandos:
+
+  ```bash
+  npm cache clean --force
+  ```
+  ```bash
+  npm install -g npm@latest
+  ```
+
   ## Banco de dados
 
-Configure seu o banco de dados postgres utilizando com as configurações usadas nessas variaveis:
+Configure seu o banco de dados postgres utilizando com as configurações usadas nessas variaveis, para rodar o banco localmente:
 
 ```bash
-POSTGRES_HOST=
-POSTGRES_PORT=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
+POSTGRES_HOST=db_dev
+POSTGRES_PORT=5432
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=desafio-afya
+```
+Caso tenha sido em modo production, use essas:
+
+```bash
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+POSTGRES_USER=admin
+POSTGRES_PASSWORD=admin
+POSTGRES_DB=desafio-afya
 ```
 # ATENÇÃO: CRIAR USUÁRIO ROLE:ADMIN e USUÁRIO ROLE:DOCTOR
 
